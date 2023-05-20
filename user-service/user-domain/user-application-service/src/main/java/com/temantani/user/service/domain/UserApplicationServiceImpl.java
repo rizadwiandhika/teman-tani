@@ -16,6 +16,7 @@ import com.temantani.user.service.domain.dto.registration.AdminRegistrationReque
 import com.temantani.user.service.domain.dto.registration.UserRegistrationRequest;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationResponse;
 import com.temantani.user.service.domain.dto.roleactivation.RoleActivationRequest;
+import com.temantani.user.service.domain.dto.roleactivation.RoleActivationResponse;
 import com.temantani.user.service.domain.dto.track.UserDetailTrackResponse;
 import com.temantani.user.service.domain.dto.updateprofile.UpdateProfileRequest;
 import com.temantani.user.service.domain.entity.Admin;
@@ -101,7 +102,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
   @Override
   @Transactional
-  public void activateRole(UserId initiatorId, UserId userId, RoleActivationRequest request) {
+  public RoleActivationResponse activateRole(UserId initiatorId, UserId userId, RoleActivationRequest request) {
     User initiator = findUserByIdOrThrow(initiatorId);
     User user = getUpdatedUserForRoleActivation(findUserByIdOrThrow(userId), request);
 
@@ -117,8 +118,8 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     // TODO: save to outbox table
 
-    userRepository.save(event.getUser());
-
+    user = userRepository.save(event.getUser());
+    return mapper.userToRoleActivationResponse(user, "Role activated successfully", role.name());
   }
 
   @Override
@@ -168,8 +169,12 @@ public class UserApplicationServiceImpl implements UserApplicationService {
   private User getUpdatedUserProfile(User user, UpdateProfileRequest request) {
     user.setName(request.getName());
     user.setPhoneNumber(request.getPhoneNumber());
-    user.setBankAccount(getUpdatedBank(user, request.getBankAccount()));
-    user.setAddress(getUpdatedAddress(user, request.getAddress()));
+    if (request.getBankAccount() != null) {
+      user.setBankAccount(getUpdatedBank(user, request.getBankAccount()));
+    }
+    if (request.getAddress() != null) {
+      user.setAddress(getUpdatedAddress(user, request.getAddress()));
+    }
 
     return user;
   }

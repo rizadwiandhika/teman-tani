@@ -12,6 +12,7 @@ import com.temantani.domain.valueobject.UserRole;
 import com.temantani.user.service.domain.dto.registration.AdminRegistrationRequest;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationRequest;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationResponse;
+import com.temantani.user.service.domain.dto.roleactivation.RoleActivationResponse;
 import com.temantani.user.service.domain.dto.track.UserDetailTrackResponse;
 import com.temantani.user.service.domain.entity.Admin;
 import com.temantani.user.service.domain.entity.User;
@@ -67,11 +68,13 @@ public class UserDataMapper {
         .identityCardNumber(user.getIdentityCardNumber())
         .identityCardUrl(user.getIdentityCardUrl())
         .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
-        .address(new com.temantani.user.service.domain.dto.common.Address(
-            user.getAddress().getStreet(), user.getAddress().getCity(), user.getAddress().getPostalCode()))
-        .bankAccount(new com.temantani.user.service.domain.dto.common.BankAccount(
-            user.getBankAccount().getBank(), user.getBankAccount().getAccountNumber(),
-            user.getBankAccount().getAccountHolderName()))
+        .address(user.getAddress() == null ? null
+            : new com.temantani.user.service.domain.dto.common.Address(
+                user.getAddress().getStreet(), user.getAddress().getCity(), user.getAddress().getPostalCode()))
+        .bankAccount(user.getBankAccount() == null ? null
+            : new com.temantani.user.service.domain.dto.common.BankAccount(
+                user.getBankAccount().getBank(), user.getBankAccount().getAccountNumber(),
+                user.getBankAccount().getAccountHolderName()))
         .build();
   }
 
@@ -82,6 +85,14 @@ public class UserDataMapper {
         .password(request.getPassword())
         .phoneNumber(request.getPhoneNumber())
         .role(AdminRole.valueOf(request.getRole()))
+        .build();
+  }
+
+  public RoleActivationResponse userToRoleActivationResponse(User user, String message, String activatedRole) {
+    return RoleActivationResponse.builder()
+        .message(message)
+        .activatedRole(activatedRole)
+        .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
         .build();
   }
 

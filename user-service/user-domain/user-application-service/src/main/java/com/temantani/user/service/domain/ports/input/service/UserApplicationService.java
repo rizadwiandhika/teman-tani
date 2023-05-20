@@ -6,6 +6,7 @@ import com.temantani.user.service.domain.dto.registration.AdminRegistrationReque
 import com.temantani.user.service.domain.dto.registration.UserRegistrationRequest;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationResponse;
 import com.temantani.user.service.domain.dto.roleactivation.RoleActivationRequest;
+import com.temantani.user.service.domain.dto.roleactivation.RoleActivationResponse;
 import com.temantani.user.service.domain.dto.track.UserDetailTrackResponse;
 import com.temantani.user.service.domain.dto.updateprofile.UpdateProfileRequest;
 
@@ -17,7 +18,7 @@ public interface UserApplicationService {
 
   BasicResponse updateProfile(UserId initiatorId, UserId userId, UpdateProfileRequest request);
 
-  void activateRole(UserId initiatorId, UserId userId, RoleActivationRequest request);
+  RoleActivationResponse activateRole(UserId initiatorId, UserId userId, RoleActivationRequest request);
 
   UserDetailTrackResponse trackUserDetail(UserId trackerId, UserId userId);
 

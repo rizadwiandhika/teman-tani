@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Builder.Default;
 
 @Data
 @Builder
@@ -12,13 +11,10 @@ import lombok.Builder.Default;
 @NoArgsConstructor
 public class BankAccount {
 
-  @Default
-  private String bank = "";
+  private String bank;
 
-  @Default
-  private String accountNumber = "";
+  private String accountNumber;
 
-  @Default
-  private String accountHolderName = "";
+  private String accountHolderName;
 
 }

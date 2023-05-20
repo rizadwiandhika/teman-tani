@@ -2,6 +2,7 @@ package com.temantani.user.service.application.security;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -55,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         .builder()
         .username(user.getId().getValue().toString())
         .password(user.getPassword())
-        .roles(user.getRoles().stream().map(UserRole::name).toList())
+        .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
         .build();
   }
 
