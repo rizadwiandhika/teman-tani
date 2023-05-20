@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <groupId>com.temantani</groupId>
-      <artifactId>common-domain</artifactId>
+      <artifactId>common-application-service</artifactId>
     </dependency>
   </dependencies>
 </project>

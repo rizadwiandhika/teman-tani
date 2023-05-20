@@ -14,7 +14,7 @@
   <dependencies>
     <dependency>
       <groupId>com.temantani</groupId>
-      <artifactId>common-domain</artifactId>
+      <artifactId>common-domain-core</artifactId>
     </dependency>
   </dependencies>
 </project>

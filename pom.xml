@@ -35,7 +35,12 @@
     <dependencies>
       <dependency>
         <groupId>com.temantani</groupId>
-        <artifactId>common-domain</artifactId>
+        <artifactId>common-domain-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
+        <artifactId>common-application-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
