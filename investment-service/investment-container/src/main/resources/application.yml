@@ -1,0 +1,52 @@
+# server.port=8084
+
+# logging.level.com.tematani=DEBUG
+
+# storage.tmp-location=/Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage/tmp
+# storage.location=/Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage
+
+# midtrans.server-key=SB-Mid-server-qHDHZ_RDAvBxvOHT10tNRWdy
+# midtrans.is-production=false
+
+# spring.sql.init.mode=ALWAYS
+# spring.sql.init.schema-locations=classpath:init-schema.sql,classpath:init-data.sql
+# spring.sql.init.platform=postgres
+
+# spring.jpa.data
+
+server:
+  port: 8084
+
+logging:
+  level:
+    com.tematani: DEBUG
+
+storage:
+  tmp-location: /Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage/tmp
+  location: /Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage
+
+midtrans:
+  client-key: SB-Mid-client-WIi9CZS0XzioWHCO
+  server-key: SB-Mid-server-qHDHZ_RDAvBxvOHT10tNRWdy
+  is-production: false
+
+spring:
+  sql:
+    init:
+      mode: ALWAYS
+      schema-locations: classpath:init-schema.sql, classpath:init-data.sql
+      platform: postgres
+  jpa:
+    database: postgresql
+    open-in-view: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        default-schema: investment
+  datasource:
+    url: jdbc:postgresql://localhost:5432/temantani?currentSchema=investment&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver

@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+logging:
+  level:
+    com.tematani: DEBUG
+
+storage:
+  tmp-location: /Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage/tmp
+  location: /Users/riza/Documents/Kuliah/Tugas-Akhir/teman-tani/storage
+
+spring:
+  sql:
+    init:
+      mode: ALWAYS
+      schema-locations: classpath:init-schema.sql, classpath:init-data.sql
+      platform: postgres
+  jpa:
+    database: postgresql
+    open-in-view: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        default-schema: user
+  datasource:
+    url: jdbc:postgresql://localhost:5432/temantani?currentSchema=user&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
