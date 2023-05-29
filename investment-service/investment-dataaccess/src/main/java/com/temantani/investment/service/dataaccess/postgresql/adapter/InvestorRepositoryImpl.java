@@ -2,12 +2,14 @@ package com.temantani.investment.service.dataaccess.postgresql.adapter;
 
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.investment.service.dataaccess.postgresql.mapper.InvestmentDataAccessMapper;
 import com.temantani.investment.service.dataaccess.postgresql.repository.InvestorJpaRepository;
 import com.temantani.investment.service.domain.entity.Investor;
+import com.temantani.investment.service.domain.exception.InvestorAlreadyExistsException;
 import com.temantani.investment.service.domain.ports.output.repository.InvestorRepository;
 
 @Component
@@ -27,8 +29,12 @@ public class InvestorRepositoryImpl implements InvestorRepository {
   }
 
   @Override
-  public Investor save(Investor investor) {
-    return mapper.investorEntityToInvestor(repo.save(mapper.investorToInvestorEntity(investor)));
+  public Investor save(Investor investor) throws InvestorAlreadyExistsException {
+    try {
+      return mapper.investorEntityToInvestor(repo.save(mapper.investorToInvestorEntity(investor)));
+    } catch (DataIntegrityViolationException e) {
+      throw new InvestorAlreadyExistsException("Investor already exists", e);
+    }
   }
 
 }

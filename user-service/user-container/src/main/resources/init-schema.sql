@@ -9,6 +9,9 @@ CREATE TYPE user_role AS ENUM ('LANDOWNER', 'INVESTOR', 'WORKER', 'BUYER', 'ADMI
 DROP TYPE IF EXISTS admin_role;
 CREATE TYPE admin_role AS ENUM ('ADMIN_SUPER', 'ADMIN_LANDOWNER', 'ADMIN_PROJECT', 'ADMIN_WORKER', 'ADMIN_BUYER');
 
+DROP TYPE IF EXISTS outbox_status;
+CREATE TYPE outbox_status AS ENUM ('STARTED', 'FAILED', 'COMPLETED');
+
 DROP TABLE IF EXISTS "user".admins CASCADE;
 CREATE TABLE "user".admins (
 	id uuid NOT NULL,
@@ -61,6 +64,18 @@ CREATE TABLE "user".bank_accounts (
   account_number character varying COLLATE pg_catalog."default" NOT NULL,
 
 	CONSTRAINT bank_accounts_pkey PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS "user".user_outbox CASCADE;
+CREATE TABLE "user".user_outbox (
+	id uuid NOT NULL,
+  payload jsonb NOT NULL,
+  version integer NOT NULL,
+  outbox_status outbox_status NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  processed_at timestamp with time zone,
+
+	CONSTRAINT user_outbox_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE "user".user_roles

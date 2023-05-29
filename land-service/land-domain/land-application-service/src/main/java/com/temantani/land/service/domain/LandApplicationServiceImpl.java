@@ -19,6 +19,7 @@ import com.temantani.land.service.domain.entity.Land;
 import com.temantani.land.service.domain.event.LandApprovedEvent;
 import com.temantani.land.service.domain.exception.LandDomainException;
 import com.temantani.land.service.domain.mapper.LandDataMapper;
+import com.temantani.land.service.domain.outbox.scheduler.LandOutboxHelper;
 import com.temantani.land.service.domain.ports.input.service.LandApplicationService;
 import com.temantani.land.service.domain.ports.output.repository.ApproverRepository;
 import com.temantani.land.service.domain.ports.output.repository.BorrowerRepository;
@@ -34,14 +35,17 @@ public class LandApplicationServiceImpl implements LandApplicationService {
   private final BorrowerRepository borrowerRepository;
   private final LandRepository landRepository;
   private final ApproverRepository approverRepository;
+  private final LandOutboxHelper landOutboxHelper;
 
   public LandApplicationServiceImpl(LandDataMapper mapper, LandDomainService domainService,
-      BorrowerRepository borrowerRepository, LandRepository landRepository, ApproverRepository approverRepository) {
+      BorrowerRepository borrowerRepository, LandRepository landRepository, ApproverRepository approverRepository,
+      LandOutboxHelper landOutboxHelper) {
     this.mapper = mapper;
     this.domainService = domainService;
     this.borrowerRepository = borrowerRepository;
     this.landRepository = landRepository;
     this.approverRepository = approverRepository;
+    this.landOutboxHelper = landOutboxHelper;
   }
 
   @Override
@@ -126,9 +130,9 @@ public class LandApplicationServiceImpl implements LandApplicationService {
     }
 
     LandApprovedEvent domainEvent = domainService.approve(land, approver, assesment, approvalStatus);
-    // TODO: save to outbox table
 
     landRepository.save(land);
+    landOutboxHelper.createOutboxMessage(mapper.landApprovedEventToLandApprovedEventMessage(domainEvent));
 
     return BasicResponse.builder().message("Land successfully approved").build();
   }

@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.temantani.domain.outbox.OutboxStatus;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class KafkaMessageHelper {
 
@@ -17,17 +21,16 @@ public class KafkaMessageHelper {
     this.mapper = mapper;
   }
 
-  public ListenableFutureCallback<SendResult<Object, Object>> getKafkaCallback(
+  // TODO fix into avro model
+  public <T, U> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(
       String responseTopicName,
-      Object avroModel,
-      Object outboxMessage,
-      BiConsumer<Object, OutboxStatus> callback,
-      String orderId,
-      String avroModelName) {
+      T avroModel,
+      U outboxMessage,
+      BiConsumer<U, OutboxStatus> callback) {
 
-    return new ListenableFutureCallback<SendResult<Object, Object>>() {
+    return new ListenableFutureCallback<SendResult<String, T>>() {
       @Override
-      public void onSuccess(SendResult<Object, Object> result) {
+      public void onSuccess(SendResult<String, T> result) {
         callback.accept(outboxMessage, OutboxStatus.COMPLETED);
       }
 
@@ -38,4 +41,12 @@ public class KafkaMessageHelper {
     };
   }
 
+  public <T> T getEventPayload(String payload, Class<T> type) {
+    try {
+      return mapper.readValue(payload, type);
+    } catch (Exception e) {
+      log.error("Unable to parse json into {}", type.getName(), e);
+      throw new RuntimeException(e);
+    }
+  }
 }

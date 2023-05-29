@@ -9,14 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.UserId;
-import com.temantani.investment.service.domain.dto.CreateInvestmentRequest;
-import com.temantani.investment.service.domain.dto.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.common.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.create.CreateInvestmentRequest;
 import com.temantani.investment.service.domain.entity.Investment;
 import com.temantani.investment.service.domain.entity.Investor;
 import com.temantani.investment.service.domain.entity.Project;
 import com.temantani.investment.service.domain.event.InvestmentPaidEvent;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
 import com.temantani.investment.service.domain.mapper.InvestmentDataMapper;
+import com.temantani.investment.service.domain.outbox.scheduler.InvestmentPaidOutboxHelper;
 import com.temantani.investment.service.domain.ports.input.service.InvestmentApplicationService;
 import com.temantani.investment.service.domain.ports.output.payment.PaymentService;
 import com.temantani.investment.service.domain.ports.output.repository.InvestmentRepository;
@@ -35,16 +36,18 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   private final InvestmentDataMapper mapper;
   private final InvestmentDomainService domainService;
   private final PaymentService paymentService;
+  private final InvestmentPaidOutboxHelper helper;
 
   public InvestmentApplicationServiceImpl(InvestmentRepository investmentRepository,
       InvestorRepository investorRepository, ProjectRepository projectRepository, InvestmentDataMapper mapper,
-      InvestmentDomainService domainService, PaymentService paymentService) {
+      InvestmentDomainService domainService, PaymentService paymentService, InvestmentPaidOutboxHelper helper) {
     this.investmentRepository = investmentRepository;
     this.investorRepository = investorRepository;
     this.projectRepository = projectRepository;
     this.mapper = mapper;
     this.domainService = domainService;
     this.paymentService = paymentService;
+    this.helper = helper;
   }
 
   @Override
@@ -102,10 +105,9 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
     log.info("Paying investment: {}", investment.getId().getValue().toString());
     InvestmentPaidEvent domainEvent = domainService.payInvestment(investment, project);
 
-    projectRepository.save(project);
     investment = investmentRepository.save(investment);
-
-    // TODO: save to outbox table
+    projectRepository.save(project);
+    helper.createOutbox(mapper.investmentPaidEventToInvestmentPaidEventPayload(domainEvent));
 
     return InvestmentBasicResponse.builder()
         .investmentId(investment.getId().getValue().toString())

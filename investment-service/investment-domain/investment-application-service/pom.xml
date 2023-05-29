@@ -18,6 +18,10 @@
     </dependency>
     <dependency>
       <groupId>com.temantani</groupId>
+      <artifactId>common-application-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
       <artifactId>investment-domain-core</artifactId>
     </dependency>
     <dependency>

@@ -1,0 +1,113 @@
+{
+  "type": "record",
+  "name": "LandRegisteredAvroModel",
+  "namespace": "com.temantani.kafka.land.avro.model",
+  "fields": [
+    {
+      "name": "landId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "ownerId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "approverId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "approvedAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "proposedAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "harvestSuitabilities",
+      "type": "string"
+    },
+    {
+      "name": "groundHeightValue",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
+      "name": "groundHeightUnit",
+      "type": "string"
+    },
+    {
+      "name": "soilPh",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
+      "name": "waterAvailabilityStatus",
+      "type": "string"
+    },
+    {
+      "name": "landUsageHistory",
+      "type": "string"
+    },
+    {
+      "name": "landStatus",
+      "type": "string"
+    },
+    {
+      "name": "areaValue",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
+      "name": "areaUnit",
+      "type": "string"
+    },
+    {
+      "name": "street",
+      "type": "string"
+    },
+    {
+      "name": "city",
+      "type": "string"
+    },
+    {
+      "name": "postalCode",
+      "type": "string"
+    },
+    {
+      "name": "certificateUrl",
+      "type": "string"
+    },
+    {
+      "name": "photos",
+      "type": "string"
+    }
+  ]
+}

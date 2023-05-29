@@ -36,6 +36,15 @@ public class Money {
     return new Money(setScale(amount.multiply(new BigDecimal(multiplier))));
   }
 
+  public Money multiply(BigDecimal multiplier) {
+    return new Money(setScale(amount.multiply(multiplier)));
+  }
+
+  public Money divide(Money divisor) {
+    BigDecimal quotient = amount.divide(divisor.getAmount());
+    return new Money(setScale(quotient));
+  }
+
   private BigDecimal setScale(BigDecimal input) {
     return input.setScale(2, RoundingMode.HALF_EVEN);
   }

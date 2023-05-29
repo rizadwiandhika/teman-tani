@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.temantani.investment.service.domain.valueobject.InvestmentStatus;
 
@@ -31,6 +32,9 @@ public class InvestmentEntity {
   private UUID projectId;
   private UUID investorId;
   private BigDecimal amount;
+
+  @Version
+  private Integer version;
 
   @Enumerated(EnumType.STRING)
   private InvestmentStatus status;

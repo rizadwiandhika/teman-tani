@@ -3,6 +3,7 @@ package com.temantani.domain.entity;
 public abstract class BaseEntity<ID> {
 
   private ID id;
+  private Integer version;
 
   public ID getId() {
     return id;
@@ -10,6 +11,14 @@ public abstract class BaseEntity<ID> {
 
   public void setId(ID id) {
     this.id = id;
+  }
+
+  public Integer getVersion() {
+    return version;
+  }
+
+  public void setVersion(Integer version) {
+    this.version = version;
   }
 
   @Override

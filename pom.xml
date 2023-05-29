@@ -13,6 +13,7 @@
     <module>user-service</module>
     <module>land-service</module>
     <module>investment-service</module>
+    <module>project-service</module>
     <module>common</module>
     <module>infrastructure</module>
   </modules>
@@ -125,6 +126,11 @@
       </dependency>
       <dependency>
         <groupId>com.temantani</groupId>
+        <artifactId>land-messaging</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
         <artifactId>investment-domain-core</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -145,7 +151,32 @@
       </dependency>
       <dependency>
         <groupId>com.temantani</groupId>
+        <artifactId>investment-messaging</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
         <artifactId>investment-payment</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
+        <artifactId>project-domain-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
+        <artifactId>project-application-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
+        <artifactId>project-dataaccess</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
+        <artifactId>project-messaging</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

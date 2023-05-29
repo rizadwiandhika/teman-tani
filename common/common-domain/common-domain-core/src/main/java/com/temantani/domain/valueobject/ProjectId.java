@@ -8,4 +8,12 @@ public class ProjectId extends BaseId<UUID> {
     super(id);
   }
 
+  public static ProjectId fromString(String id) {
+    return new ProjectId(UUID.fromString(id));
+  }
+
+  public static ProjectId generate() {
+    return new ProjectId(UUID.randomUUID());
+  }
+
 }

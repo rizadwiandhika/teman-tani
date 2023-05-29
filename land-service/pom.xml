@@ -16,6 +16,6 @@
     <module>land-application</module>
     <module>land-dataaccess</module>
     <module>land-container</module>
-    <!-- <module>land-messaging</module> -->
+    <module>land-messaging</module>
   </modules>
 </project>

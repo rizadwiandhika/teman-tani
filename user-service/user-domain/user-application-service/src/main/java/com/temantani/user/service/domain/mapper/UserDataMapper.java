@@ -16,6 +16,10 @@ import com.temantani.user.service.domain.dto.roleactivation.RoleActivationRespon
 import com.temantani.user.service.domain.dto.track.UserDetailTrackResponse;
 import com.temantani.user.service.domain.entity.Admin;
 import com.temantani.user.service.domain.entity.User;
+import com.temantani.user.service.domain.event.AdminRegisteredEvent;
+import com.temantani.user.service.domain.event.UserProfileUpdatedEvent;
+import com.temantani.user.service.domain.event.UserRoleActivatedEvent;
+import com.temantani.user.service.domain.outbox.model.UserEventPayload;
 
 @Component
 public class UserDataMapper {
@@ -93,6 +97,59 @@ public class UserDataMapper {
         .message(message)
         .activatedRole(activatedRole)
         .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
+        .build();
+  }
+
+  public UserEventPayload userRoleActivatedEventToUserOutboxMessage(UserRoleActivatedEvent event) {
+    User user = event.getUser();
+    return UserEventPayload.builder()
+        .type("ROLE_ACTIVATED")
+        .userId(user.getId().getValue())
+        .name(user.getName())
+        .email(user.getEmail())
+        .phoneNumber(user.getPhoneNumber())
+        .profilePicture(user.getProfilePictureUrl())
+        .activatedRole(event.getActivatedRole().name())
+        .roles(String.join(",", user.getRoles().stream().map(UserRole::name).collect(Collectors.toList())))
+        .bank(user.getBankAccount() == null ? "" : user.getBankAccount().getBank())
+        .bankAccountNumber(user.getBankAccount() == null ? "" : user.getBankAccount().getAccountNumber())
+        .bankAccountHolderName(user.getBankAccount() == null ? "" : user.getBankAccount().getAccountHolderName())
+        .street(user.getAddress() == null ? "" : user.getAddress().getStreet())
+        .city(user.getAddress() == null ? "" : user.getAddress().getCity())
+        .postalCode(user.getAddress() == null ? "" : user.getAddress().getPostalCode())
+        .build();
+  }
+
+  public UserEventPayload userProfileUpdatedEventToUserEventPayload(UserProfileUpdatedEvent event) {
+    User user = event.getUser();
+    return UserEventPayload.builder()
+        .type("PROFILE_UPDATED")
+        .userId(user.getId().getValue())
+        .name(user.getName())
+        .email(user.getEmail())
+        .phoneNumber(user.getPhoneNumber())
+        .profilePicture(user.getProfilePictureUrl())
+        .activatedRole("")
+        .roles(String.join(",", user.getRoles().stream().map(UserRole::name).collect(Collectors.toList())))
+        .bank(user.getBankAccount() == null ? "" : user.getBankAccount().getBank())
+        .bankAccountNumber(user.getBankAccount() == null ? "" : user.getBankAccount().getAccountNumber())
+        .bankAccountHolderName(user.getBankAccount() == null ? "" : user.getBankAccount().getAccountHolderName())
+        .street(user.getAddress() == null ? "" : user.getAddress().getStreet())
+        .city(user.getAddress() == null ? "" : user.getAddress().getCity())
+        .postalCode(user.getAddress() == null ? "" : user.getAddress().getPostalCode())
+        .build();
+  }
+
+  public UserEventPayload adminRegisteredEventToUserEventPayload(AdminRegisteredEvent event) {
+    Admin admin = event.getAdmin();
+    return UserEventPayload.builder()
+        .type("ROLE_ACTIVATED")
+        .userId(admin.getId().getValue())
+        .email(admin.getEmail())
+        .phoneNumber(admin.getPhoneNumber())
+        .activatedRole(admin.getRole().name())
+        .roles(admin.getRole().name())
+        .name(admin.getName())
         .build();
   }
 

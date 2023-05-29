@@ -9,6 +9,9 @@ CREATE TYPE land_status AS ENUM ('PROPOSED', 'REQUIRES_REVISION', 'REVISED', 'RE
 DROP TYPE IF EXISTS water_availability_status;
 CREATE TYPE water_availability_status AS ENUM ('ABUNDANT', 'LIMITED', 'SEASONAL', 'SCARCITY');
 
+DROP TYPE IF EXISTS outbox_status;
+CREATE TYPE outbox_status AS ENUM ('STARTED', 'FAILED', 'COMPLETED');
+
 DROP TABLE IF EXISTS "land".approvers CASCADE;
 CREATE TABLE "land".approvers (
   id uuid NOT NULL,
@@ -76,6 +79,18 @@ CREATE TABLE "land".addresses (
   postal_code character varying COLLATE pg_catalog."default" NOT NULL,
 
 	CONSTRAINT addresses_pkey PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS "land".land_outbox CASCADE;
+CREATE TABLE "land".land_outbox (
+	id uuid NOT NULL,
+  payload jsonb NOT NULL,
+  version integer NOT NULL,
+  outbox_status outbox_status NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  processed_at timestamp with time zone,
+
+	CONSTRAINT land_outbox_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE "land".lands

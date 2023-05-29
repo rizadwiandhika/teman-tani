@@ -11,6 +11,7 @@ import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
+import com.temantani.investment.service.domain.exception.InvestmentPaymentException;
 import com.temantani.investment.service.domain.valueobject.InvestmentStatus;
 
 public class Investment extends AggregateRoot<InvestmentId> {
@@ -45,7 +46,7 @@ public class Investment extends AggregateRoot<InvestmentId> {
     validateMandatoryFields();
 
     if (status != PENDING) {
-      throw new InvestmentDomainException("Investment is not in valid state for payment: " + status.name());
+      throw new InvestmentPaymentException("Investment is not in valid state for payment: " + status.name());
     }
 
     status = InvestmentStatus.PAID;
@@ -70,6 +71,7 @@ public class Investment extends AggregateRoot<InvestmentId> {
   // Constructor, builder, getters, setters
   private Investment(Builder builder) {
     super.setId(builder.id);
+    super.setVersion(builder.version);
     this.projectId = builder.projectId;
     this.investorId = builder.investorId;
     this.amount = builder.amount;
@@ -104,11 +106,17 @@ public class Investment extends AggregateRoot<InvestmentId> {
   public static class Builder {
 
     private InvestmentId id;
+    private Integer version;
     private ProjectId projectId;
     private UserId investorId;
     private Money amount;
     private InvestmentStatus status;
     private List<String> failureReasons;
+
+    public Builder version(Integer version) {
+      this.version = version;
+      return this;
+    }
 
     public Builder id(InvestmentId id) {
       this.id = id;

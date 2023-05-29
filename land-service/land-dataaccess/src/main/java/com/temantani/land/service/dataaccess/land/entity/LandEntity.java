@@ -32,13 +32,9 @@ public class LandEntity {
   private UUID id;
 
   private UUID ownerId;
-
   private BigDecimal areaValue;
-
   private String areaUnit;
-
   private String certificateUrl;
-
   private String photos;
 
   @Enumerated(EnumType.STRING)

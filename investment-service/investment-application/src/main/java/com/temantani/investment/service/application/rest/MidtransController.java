@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.investment.service.application.dto.MidtransNotificationDTO;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
+import com.temantani.investment.service.domain.exception.InvestmentPaymentException;
 import com.temantani.investment.service.domain.ports.input.service.InvestmentApplicationService;
 import com.temantani.investment.service.domain.ports.output.payment.PaymentService;
 
@@ -35,12 +37,14 @@ public class MidtransController {
   private final InvestmentApplicationService applicationService;
   private final PaymentService paymentService;
   private final ObjectMapper objectMapper;
+  private final String serverHost;
 
   public MidtransController(InvestmentApplicationService applicationService, PaymentService paymentService,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, @Value("${server.port}") String serverPort) {
     this.applicationService = applicationService;
     this.paymentService = paymentService;
     this.objectMapper = objectMapper;
+    this.serverHost = "http://127.0.0.1:" + serverPort;
   }
 
   @PostMapping("/investments/{investment_id}/charge")
@@ -63,7 +67,10 @@ public class MidtransController {
 
     if (isTransactionSuccess(payload)) {
       log.info("[MidtransController] notificationHandler: transaction success");
-      applicationService.payInvestment(investmentId);
+      try {
+        applicationService.payInvestment(investmentId);
+      } catch (InvestmentPaymentException e) {
+      }
       return ResponseEntity.ok().build();
     }
 
@@ -79,10 +86,11 @@ public class MidtransController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping(value = "/redirect/ui/{investment_id}/{status}")
+  @GetMapping(value = "/investments/{investment_id}/{status}")
   public ResponseEntity<String> redirectView(@PathVariable("investment_id") String investmentId,
       @PathVariable("status") String status) {
-    String message = String.format("Investment for: '%s' is %s", investmentId, status);
+    String message = String.format("Payment for investment: '%s' is %s. We will process it shortly", investmentId,
+        status);
     return ResponseEntity.ok(message);
   }
 
@@ -93,14 +101,14 @@ public class MidtransController {
     log.info("DTO: {}", dto);
 
     if (isTransactionSuccess(dto)) {
-      return new RedirectView("http://localhost:8084/midtrans/redirect/ui/" + dto.getOrderId() + "/success");
+      return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/success");
     }
 
     if (isTransactionPending(dto.getTransactionStatus())) {
-      return new RedirectView("http://localhost:8084/midtrans/redirect/ui/" + dto.getOrderId() + "/pending");
+      return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/pending");
     }
 
-    return new RedirectView("http://localhost:8084/midtrans/redirect/ui/" + dto.getOrderId() + "/failed");
+    return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/failed");
   }
 
   private boolean isTransactionPending(String transactionStatus) {

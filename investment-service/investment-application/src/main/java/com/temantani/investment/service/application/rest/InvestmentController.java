@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 // import com.temantani.domain.dto.BasicResponse;
 import com.temantani.domain.valueobject.UserId;
-import com.temantani.investment.service.domain.dto.CreateInvestmentRequest;
-import com.temantani.investment.service.domain.dto.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.common.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.create.CreateInvestmentRequest;
 import com.temantani.investment.service.domain.ports.input.service.InvestmentApplicationService;
 
 // TODO: secure request to "/investments" to be authenticated with Spring Security

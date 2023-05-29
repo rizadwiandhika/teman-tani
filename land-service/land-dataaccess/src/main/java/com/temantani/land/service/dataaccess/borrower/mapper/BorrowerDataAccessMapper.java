@@ -18,4 +18,13 @@ public class BorrowerDataAccessMapper {
         .build();
   }
 
+  public BorrowerEntity borrowerToBorrowerEntity(Borrower borrower) {
+    return BorrowerEntity.builder()
+        .id(borrower.getId().getValue())
+        .email(borrower.getEmail())
+        .name(borrower.getName())
+        .profilePictureUrl(borrower.getProfilePictureUrl())
+        .build();
+  }
+
 }

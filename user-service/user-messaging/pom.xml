@@ -11,6 +11,23 @@
   <artifactId>user-messaging</artifactId>
   <packaging>jar</packaging>
 
-  <dependencies></dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>user-application-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>kafka-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>kafka-producer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>kafka-config-data</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

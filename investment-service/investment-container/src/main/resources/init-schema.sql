@@ -40,6 +40,7 @@ CREATE TABLE "investment".investments (
   investor_id uuid NOT NULL,
   amount double precision NOT NULL,
   status investment_status NOT NULL,
+  version integer NOT NULL,
   failure_reasons character varying COLLATE pg_catalog."default",
 
   CONSTRAINT investments_pkey PRIMARY KEY (id)

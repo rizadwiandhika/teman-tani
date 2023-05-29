@@ -1,0 +1,76 @@
+{
+  "namespace": "com.temantani.kafka.user.avro.model",
+  "type": "record",
+  "name": "UserAvroModel",
+  "fields": [
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "phoneNumber",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "profilePictureUrl",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "activatedRole",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "roles",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "bank",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "bankAccountNumber",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "bankAccountHolderName",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "street",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "city",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "postalCode",
+      "type": ["null", "string"],
+      "default": null
+    }
+  ]
+}

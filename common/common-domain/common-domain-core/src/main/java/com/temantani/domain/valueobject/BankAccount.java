@@ -57,8 +57,9 @@ public class BankAccount {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((accountNumber == null) ? 0 : accountNumber.hashCode());
     result = prime * result + ((bank == null) ? 0 : bank.hashCode());
+    result = prime * result + ((accountNumber == null) ? 0 : accountNumber.hashCode());
+    result = prime * result + ((accountHolderName == null) ? 0 : accountHolderName.hashCode());
     return result;
   }
 
@@ -71,15 +72,20 @@ public class BankAccount {
     if (getClass() != obj.getClass())
       return false;
     BankAccount other = (BankAccount) obj;
+    if (bank == null) {
+      if (other.bank != null)
+        return false;
+    } else if (!bank.equals(other.bank))
+      return false;
     if (accountNumber == null) {
       if (other.accountNumber != null)
         return false;
     } else if (!accountNumber.equals(other.accountNumber))
       return false;
-    if (bank == null) {
-      if (other.bank != null)
+    if (accountHolderName == null) {
+      if (other.accountHolderName != null)
         return false;
-    } else if (!bank.equals(other.bank))
+    } else if (!accountHolderName.equals(other.accountHolderName))
       return false;
     return true;
   }

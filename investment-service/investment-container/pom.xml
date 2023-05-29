@@ -29,6 +29,10 @@
     </dependency>
     <dependency>
       <groupId>com.temantani</groupId>
+      <artifactId>investment-messaging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
       <artifactId>investment-payment</artifactId>
     </dependency>
     <dependency>
@@ -44,4 +48,25 @@
       <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <image>
+            <name>${project.groupId}/investment.service:${project.version}</name>
+          </image>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>build-image</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

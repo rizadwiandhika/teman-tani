@@ -23,10 +23,10 @@ import com.temantani.user.service.domain.entity.Admin;
 import com.temantani.user.service.domain.entity.User;
 import com.temantani.user.service.domain.event.AdminRegisteredEvent;
 import com.temantani.user.service.domain.event.UserProfileUpdatedEvent;
-import com.temantani.user.service.domain.event.UserRegisteredEvent;
 import com.temantani.user.service.domain.event.UserRoleActivatedEvent;
 import com.temantani.user.service.domain.exception.UserDomainException;
 import com.temantani.user.service.domain.mapper.UserDataMapper;
+import com.temantani.user.service.domain.outbox.scheduler.UserOutboxHelper;
 import com.temantani.user.service.domain.ports.input.service.UserApplicationService;
 import com.temantani.user.service.domain.ports.output.repository.AdminRepository;
 import com.temantani.user.service.domain.ports.output.repository.UserRepository;
@@ -40,14 +40,17 @@ public class UserApplicationServiceImpl implements UserApplicationService {
   private final UserPasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final AdminRepository adminRepository;
+  private final UserOutboxHelper userOutboxHelper;
 
   public UserApplicationServiceImpl(UserDataMapper mapper, UserDomainService domainService,
-      UserPasswordEncoder passwordEncoder, UserRepository userRepository, AdminRepository adminRepository) {
+      UserPasswordEncoder passwordEncoder, UserRepository userRepository, AdminRepository adminRepository,
+      UserOutboxHelper userOutboxHelper) {
     this.mapper = mapper;
     this.domainService = domainService;
     this.passwordEncoder = passwordEncoder;
     this.userRepository = userRepository;
     this.adminRepository = adminRepository;
+    this.userOutboxHelper = userOutboxHelper;
   }
 
   @Override
@@ -56,11 +59,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     User user = mapper.userRegistrationRequestToUser(request);
 
     List<String> exisitingEmails = getExistingEmails(user.getEmail());
-    UserRegisteredEvent event = domainService.validateAndRegisterUser(user, exisitingEmails, passwordEncoder);
+    UserRoleActivatedEvent event = domainService.validateAndRegisterUser(user, exisitingEmails, passwordEncoder);
 
     userRepository.save(event.getUser());
 
-    // TODO: save to outbox table
+    userOutboxHelper.createUserOutboxMessage(mapper.userRoleActivatedEventToUserOutboxMessage(event));
 
     return mapper.userToUserRegistrationResponse(user, "User registered successfully");
   }
@@ -82,6 +85,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         passwordEncoder);
 
     adminRepository.save(event.getAdmin());
+    userOutboxHelper.createUserOutboxMessage(mapper.adminRegisteredEventToUserEventPayload(event));
 
     return BasicResponse.builder().message("Admin registered successfully").build();
   }
@@ -95,7 +99,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     UserProfileUpdatedEvent event = domainService.updateProfile(initiator, getUpdatedUserProfile(user, request));
     userRepository.save(event.getUser());
 
-    // TODO: save to outbox table
+    userOutboxHelper.createUserOutboxMessage(mapper.userProfileUpdatedEventToUserEventPayload(event));
 
     return BasicResponse.builder().message("User successfully updated").build();
   }
@@ -116,9 +120,10 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     UserRoleActivatedEvent event = domainService.activateRole(initiator, user, role);
 
-    // TODO: save to outbox table
-
     user = userRepository.save(event.getUser());
+
+    userOutboxHelper.createUserOutboxMessage(mapper.userRoleActivatedEventToUserOutboxMessage(event));
+
     return mapper.userToRoleActivationResponse(user, "Role activated successfully", role.name());
   }
 

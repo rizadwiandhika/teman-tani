@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.temantani.domain.valueobject.InvestmentId;
-import com.temantani.investment.service.domain.dto.CreateInvestmentRequest;
-import com.temantani.investment.service.domain.dto.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.common.InvestmentBasicResponse;
+import com.temantani.investment.service.domain.dto.create.CreateInvestmentRequest;
 
 public interface InvestmentApplicationService {
 

@@ -22,6 +22,7 @@ public class InvestmentDataAccessMapper {
   public InvestmentEntity investmentToInvestmentEntity(Investment investment) {
     return InvestmentEntity.builder()
         .id(investment.getId().getValue())
+        .version(investment.getVersion())
         .projectId(investment.getProjectId().getValue())
         .investorId(investment.getInvestorId().getValue())
         .amount(investment.getAmount().getAmount())
@@ -34,6 +35,7 @@ public class InvestmentDataAccessMapper {
   public Investment investmentEntityToInvestment(InvestmentEntity investmentEntity) {
     return Investment.builder()
         .id(new InvestmentId(investmentEntity.getId()))
+        .version(investmentEntity.getVersion())
         .projectId(new ProjectId(investmentEntity.getProjectId()))
         .investorId(new UserId(investmentEntity.getInvestorId()))
         .amount(new Money(investmentEntity.getAmount()))

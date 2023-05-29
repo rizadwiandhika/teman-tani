@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = { "com.temantani" })
 public class LandServiceApplication {
 
-  // TODO: include land messaging module
   public static void main(String[] args) {
     SpringApplication.run(LandServiceApplication.class, args);
   }
