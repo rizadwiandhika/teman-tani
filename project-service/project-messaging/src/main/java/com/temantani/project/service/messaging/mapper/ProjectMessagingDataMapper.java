@@ -5,10 +5,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.temantani.domain.valueobject.BankAccount;
-import com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel;
 import com.temantani.kafka.land.avro.model.LandRegisteredAvroModel;
 import com.temantani.kafka.user.avro.model.UserAvroModel;
-import com.temantani.project.service.domain.dto.message.investment.InvestmentPaidMessage;
 import com.temantani.project.service.domain.dto.message.land.LandRegisteredMessage;
 import com.temantani.project.service.domain.dto.message.user.ManagerRegisteredMessage;
 import com.temantani.project.service.domain.dto.message.user.ReceiverProfileUpdatedMessage;
@@ -43,15 +41,6 @@ public class ProjectMessagingDataMapper {
 
   public LandRegisteredMessage LandRegisteredAvroModelToLandRegisteredMessage(LandRegisteredAvroModel message) {
     return LandRegisteredMessage.builder()
-        .build();
-  }
-
-  public InvestmentPaidMessage investmentPaidAvroModelToInvestmentPaidMessage(InvestmentPaidAvroModel message) {
-    return InvestmentPaidMessage.builder()
-        .investemntId(UUID.fromString(message.getInvestmentId()))
-        .projectId(UUID.fromString(message.getProjectId()))
-        .investorId(UUID.fromString(message.getInvestorId()))
-        .amount(message.getAmount())
         .build();
   }
 

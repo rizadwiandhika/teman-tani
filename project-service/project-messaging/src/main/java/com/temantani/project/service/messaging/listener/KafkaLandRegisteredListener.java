@@ -8,9 +8,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.kafka.KafkaConsumer;
 import com.temantani.kafka.land.avro.model.LandRegisteredAvroModel;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.domain.ports.input.message.listener.LandRegisteredMessageListener;
 import com.temantani.project.service.messaging.mapper.ProjectMessagingDataMapper;
 

@@ -9,11 +9,11 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Repository;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.project.service.dataaccess.mapper.ProjectDataAccessMapper;
 import com.temantani.project.service.dataaccess.repository.ReceiverJpaRepository;
 import com.temantani.project.service.domain.entity.Receiver;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.domain.ports.output.repository.ReceiverRepository;
 
 @Repository

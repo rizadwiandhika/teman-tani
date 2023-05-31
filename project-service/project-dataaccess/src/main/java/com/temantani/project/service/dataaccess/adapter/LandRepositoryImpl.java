@@ -7,11 +7,11 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Repository;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.domain.valueobject.LandId;
 import com.temantani.project.service.dataaccess.mapper.ProjectDataAccessMapper;
 import com.temantani.project.service.dataaccess.repository.LandJpaRepository;
 import com.temantani.project.service.domain.entity.Land;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.domain.ports.output.repository.LandRepository;
 
 @Repository

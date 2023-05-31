@@ -2,9 +2,9 @@ package com.temantani.project.service.domain.ports.output.repository;
 
 import java.util.Optional;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.domain.valueobject.LandId;
 import com.temantani.project.service.domain.entity.Land;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 
 public interface LandRepository {
 

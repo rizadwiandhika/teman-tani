@@ -3,6 +3,7 @@ package com.temantani.project.service.domain;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
@@ -10,7 +11,6 @@ import com.temantani.domain.valueobject.UserId;
 import com.temantani.project.service.domain.dto.message.investment.InvestmentPaidMessage;
 import com.temantani.project.service.domain.entity.Investment;
 import com.temantani.project.service.domain.entity.Project;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
 import com.temantani.project.service.domain.ports.input.message.listener.InvestmentPaidMessageListener;
 import com.temantani.project.service.domain.ports.output.repository.InvestmentRepository;

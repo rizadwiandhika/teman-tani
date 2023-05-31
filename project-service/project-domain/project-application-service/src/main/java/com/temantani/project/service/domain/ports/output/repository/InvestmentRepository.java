@@ -1,7 +1,7 @@
 package com.temantani.project.service.domain.ports.output.repository;
 
+import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.domain.entity.Investment;
-import com.temantani.project.service.domain.exception.DataAlreadyExistsException;
 
 public interface InvestmentRepository {
 
