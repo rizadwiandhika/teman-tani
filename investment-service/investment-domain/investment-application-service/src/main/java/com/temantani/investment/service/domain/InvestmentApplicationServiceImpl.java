@@ -2,11 +2,13 @@ package com.temantani.investment.service.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.temantani.domain.valueobject.InvestmentId;
+import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.investment.service.domain.dto.common.InvestmentBasicResponse;
@@ -14,10 +16,10 @@ import com.temantani.investment.service.domain.dto.create.CreateInvestmentReques
 import com.temantani.investment.service.domain.entity.Investment;
 import com.temantani.investment.service.domain.entity.Investor;
 import com.temantani.investment.service.domain.entity.Project;
-import com.temantani.investment.service.domain.event.InvestmentPaidEvent;
+import com.temantani.investment.service.domain.event.InvestmentCreatedEvent;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
 import com.temantani.investment.service.domain.mapper.InvestmentDataMapper;
-import com.temantani.investment.service.domain.outbox.scheduler.InvestmentPaidOutboxHelper;
+import com.temantani.investment.service.domain.outbox.scheduler.investmentpaid.InvestmentPaidOutboxHelper;
 import com.temantani.investment.service.domain.ports.input.service.InvestmentApplicationService;
 import com.temantani.investment.service.domain.ports.output.payment.PaymentService;
 import com.temantani.investment.service.domain.ports.output.repository.InvestmentRepository;
@@ -33,10 +35,8 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   private final InvestmentRepository investmentRepository;
   private final InvestorRepository investorRepository;
   private final ProjectRepository projectRepository;
-  private final InvestmentDataMapper mapper;
   private final InvestmentDomainService domainService;
   private final PaymentService paymentService;
-  private final InvestmentPaidOutboxHelper helper;
 
   public InvestmentApplicationServiceImpl(InvestmentRepository investmentRepository,
       InvestorRepository investorRepository, ProjectRepository projectRepository, InvestmentDataMapper mapper,
@@ -44,27 +44,27 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
     this.investmentRepository = investmentRepository;
     this.investorRepository = investorRepository;
     this.projectRepository = projectRepository;
-    this.mapper = mapper;
     this.domainService = domainService;
     this.paymentService = paymentService;
-    this.helper = helper;
   }
 
   @Override
   @Transactional
   public InvestmentBasicResponse cancelInvestment(InvestmentId investmentId, List<String> reasons) {
-    Investment investment = findInvestmentByIdOrThrow(investmentId);
+    Project project = projectRepository.findByInvestmentId(investmentId)
+        .orElseThrow(
+            () -> new InvestmentDomainException("Project not found for investment: " + investmentId.getValue()));
 
-    log.info("Canceling investment: {}", investment.getId().getValue().toString());
+    log.info("Canceling investment: {}", investmentId.getValue());
 
-    domainService.cancelInvestment(investment, reasons);
+    domainService.cancelInvestment(project, investmentId, reasons);
 
-    log.info("Investment canceled for: {}", investment.getId().getValue().toString());
+    log.info("Investment canceled for: {}", investmentId.getValue());
 
-    investmentRepository.save(investment);
+    projectRepository.save(project);
 
     return InvestmentBasicResponse.builder()
-        .investmentId(investment.getId().getValue().toString())
+        .investmentId(investmentId.getValue().toString())
         .message("Investment canceled successfully")
         .build();
   }
@@ -72,17 +72,16 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   @Override
   @Transactional
   public InvestmentBasicResponse createInvestment(CreateInvestmentRequest request) {
-    Investment investment = mapper.createInvestmentRequestToInvestment(request);
-    Project project = findProjectByIdOrThrow(investment.getProjectId());
+    Project project = findProjectByIdOrThrow(new ProjectId(UUID.fromString(request.getProjectId())));
+    Investor investor = findInvestorByIdOrThrow(request.getInvestorId());
 
-    findInvestorByIdOrThrow(investment.getInvestorId());
+    InvestmentCreatedEvent event = domainService.validateAndInitiateInvestment(project, investor,
+        new Money(request.getAmount()));
 
-    domainService.validateAndInitiateInvestment(investment, project);
-
-    investment = investmentRepository.save(investment);
+    projectRepository.save(project);
 
     return InvestmentBasicResponse.builder()
-        .investmentId(investment.getId().getValue().toString())
+        .investmentId(event.getInvestment().getId().getValue().toString())
         .message("Investment created successfully")
         .build();
   }
@@ -99,18 +98,16 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   @Override
   @Transactional
   public InvestmentBasicResponse payInvestment(InvestmentId investmentId) {
-    Investment investment = findInvestmentByIdOrThrow(investmentId);
-    Project project = findProjectByIdOrThrow(investment.getProjectId());
+    Project project = projectRepository.findByInvestmentId(investmentId)
+        .orElseThrow(() -> new InvestmentDomainException("Investment not found for: " + investmentId.getValue()));
 
-    log.info("Paying investment: {}", investment.getId().getValue().toString());
-    InvestmentPaidEvent domainEvent = domainService.payInvestment(investment, project);
+    log.info("Paying investment: {}", investmentId.getValue());
+    domainService.payInvestment(project, investmentId);
 
-    investment = investmentRepository.save(investment);
     projectRepository.save(project);
-    helper.createOutbox(mapper.investmentPaidEventToInvestmentPaidEventPayload(domainEvent));
 
     return InvestmentBasicResponse.builder()
-        .investmentId(investment.getId().getValue().toString())
+        .investmentId(investmentId.getValue().toString())
         .message("Investment paid successfully")
         .build();
   }

@@ -1,0 +1,50 @@
+{
+  "type": "record",
+  "name": "CloseFundraisingResponseAvroModel",
+  "namespace": "com.temantani.kafka.investment.avro.model",
+  "fields": [
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "CloseFundraisingStatusResponseAvroModel",
+        "symbols": ["CLOSING", "CLOSED"]
+      }
+    },
+    {
+      "type": "string",
+      "name": "projectId"
+    },
+    {
+      "name": "investments",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "CloseFundraisingInvestmentResponseAvroModel",
+          "namespace": "com.temantani.kafka.investment.avro.model",
+          "fields": [
+            {
+              "type": "string",
+              "name": "investmentId"
+            },
+            {
+              "type": "string",
+              "name": "investorId"
+            },
+            {
+              "name": "amount",
+              "type": {
+                "type": "bytes",
+                "logicalType": "decimal",
+                "precision": 10,
+                "scale": 2
+              }
+            }
+          ]
+        },
+        "default": []
+      }
+    }
+  ]
+}

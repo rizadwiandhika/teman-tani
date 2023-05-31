@@ -1,4 +1,4 @@
-package com.temantani.investment.service.domain.outbox.model;
+package com.temantani.investment.service.domain.outbox.model.investmentpaid;
 
 import com.temantani.domain.outbox.OutboxMessage;
 

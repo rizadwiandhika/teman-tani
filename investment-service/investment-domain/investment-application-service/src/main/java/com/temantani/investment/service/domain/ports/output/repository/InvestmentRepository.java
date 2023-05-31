@@ -9,6 +9,6 @@ public interface InvestmentRepository {
 
   Optional<Investment> findById(InvestmentId investmentId);
 
-  Investment save(Investment investment);
+  // Investment save(Investment investment);
 
 }

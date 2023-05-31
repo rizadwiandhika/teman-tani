@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.temantani.investment.service.domain.dto.message.CreateInvestorMessage;
 import com.temantani.investment.service.domain.entity.Investor;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
-import com.temantani.investment.service.domain.exception.InvestorAlreadyExistsException;
 import com.temantani.investment.service.domain.mapper.InvestmentDataMapper;
 import com.temantani.investment.service.domain.ports.input.message.UserMessageListener;
 import com.temantani.investment.service.domain.ports.output.repository.InvestorRepository;

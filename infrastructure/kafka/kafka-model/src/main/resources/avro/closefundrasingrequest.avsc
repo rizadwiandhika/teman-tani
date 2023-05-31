@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "CloseFundraisingRequestAvroModel",
+  "namespace": "com.temantani.kafka.investment.avro.model",
+  "fields": [
+    {
+      "name": "projectId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    }
+  ]
+}

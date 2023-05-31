@@ -2,10 +2,13 @@ package com.temantani.investment.service.domain.entity;
 
 import static com.temantani.investment.service.domain.valueobject.InvestmentStatus.PENDING;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import com.temantani.domain.entity.AggregateRoot;
+import com.temantani.domain.entity.BaseEntity;
+import com.temantani.domain.helper.Helper;
 import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
@@ -14,15 +17,20 @@ import com.temantani.investment.service.domain.exception.InvestmentDomainExcepti
 import com.temantani.investment.service.domain.exception.InvestmentPaymentException;
 import com.temantani.investment.service.domain.valueobject.InvestmentStatus;
 
-public class Investment extends AggregateRoot<InvestmentId> {
+public class Investment extends BaseEntity<InvestmentId> {
 
   private final ProjectId projectId;
   private final UserId investorId;
   private final Money amount;
+  private final ZonedDateTime expiredAt;
   private InvestmentStatus status;
   private List<String> failureReasons;
 
   public static final String FAILURE_REASONS_DELIMITER = ",";
+
+  public ZonedDateTime getExpiredAt() {
+    return expiredAt;
+  }
 
   public void validateInvestment() {
     validateMandatoryFields();
@@ -49,6 +57,10 @@ public class Investment extends AggregateRoot<InvestmentId> {
       throw new InvestmentPaymentException("Investment is not in valid state for payment: " + status.name());
     }
 
+    if (expiredAt.isBefore(Helper.now())) {
+      throw new InvestmentPaymentException("Investment is already expired: " + status.name());
+    }
+
     status = InvestmentStatus.PAID;
   }
 
@@ -58,13 +70,21 @@ public class Investment extends AggregateRoot<InvestmentId> {
     }
 
     status = InvestmentStatus.CANCELED;
-    failureReasons = reasons;
+    failureReasons = reasons.stream().collect(Collectors.toList());
+  }
+
+  public Boolean isExpired() {
+    return status == PENDING && Helper.now().isAfter(expiredAt);
   }
 
   private void validateMandatoryFields() {
     if (projectId == null || investorId == null || projectId.getValue().toString().isBlank()
         || investorId.getValue().toString().isBlank()) {
       throw new InvestmentDomainException("Investment must have a project and investor");
+    }
+
+    if (expiredAt == null || expiredAt.isBefore(Helper.now())) {
+      throw new InvestmentDomainException("Investment expiration cannot be earlier than now");
     }
   }
 
@@ -77,6 +97,7 @@ public class Investment extends AggregateRoot<InvestmentId> {
     this.amount = builder.amount;
     this.status = builder.status;
     this.failureReasons = builder.failureReasons;
+    this.expiredAt = builder.expiredAt;
   }
 
   public ProjectId getProjectId() {
@@ -107,11 +128,17 @@ public class Investment extends AggregateRoot<InvestmentId> {
 
     private InvestmentId id;
     private Integer version;
+    private ZonedDateTime expiredAt;
     private ProjectId projectId;
     private UserId investorId;
     private Money amount;
     private InvestmentStatus status;
     private List<String> failureReasons;
+
+    public Builder expiredAt(ZonedDateTime expiredAt) {
+      this.expiredAt = expiredAt;
+      return this;
+    }
 
     public Builder version(Integer version) {
       this.version = version;

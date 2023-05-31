@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "InvestmentPaidAvroModel",
-  "namespace": "com.temantani.kafka.land.avro.model",
+  "namespace": "com.temantani.kafka.investment.avro.model",
   "fields": [
     {
       "name": "investmentId",

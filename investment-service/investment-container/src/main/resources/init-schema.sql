@@ -9,12 +9,16 @@ CREATE TYPE investment_status AS ENUM ('PENDING', 'PAID', 'CANCELED');
 DROP TYPE IF EXISTS project_status;
 CREATE TYPE project_status AS ENUM ('OPEN', 'CLOSED');
 
+DROP TYPE IF EXISTS outbox_status;
+CREATE TYPE outbox_status AS ENUM ('STARTED', 'FAILED', 'COMPLETED');
+
 DROP TABLE IF EXISTS "investment".projects CASCADE;
 CREATE TABLE "investment".projects (
   id uuid NOT NULL,
   status project_status NOT NULL,
   fundraising_target double precision NOT NULL,
   collected_funds double precision NOT NULL,
+  booked_funds double precision NOT NULL,
   description character varying COLLATE pg_catalog."default" NOT NULL,
   tenor_deadline timestamp with time zone NOT NULL,
   created_at timestamp with time zone,
@@ -41,9 +45,22 @@ CREATE TABLE "investment".investments (
   amount double precision NOT NULL,
   status investment_status NOT NULL,
   version integer NOT NULL,
+  expired_at timestamp with time zone,
   failure_reasons character varying COLLATE pg_catalog."default",
 
   CONSTRAINT investments_pkey PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS "investment".fundraising_closure_outbox CASCADE;
+CREATE TABLE "investment".fundraising_closure_outbox (
+  id uuid NOT NULL,
+  version integer NOT NULL,
+  outbox_status outbox_status NOT NULL,
+  payload jsonb NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  processed_at timestamp with time zone,
+
+  CONSTRAINT fundraising_closure_outbox_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE "investment".investments

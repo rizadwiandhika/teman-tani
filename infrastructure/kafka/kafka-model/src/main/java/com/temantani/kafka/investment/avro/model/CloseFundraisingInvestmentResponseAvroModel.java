@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package com.temantani.kafka.land.avro.model;
+package com.temantani.kafka.investment.avro.model;
 
 import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
@@ -13,11 +13,11 @@ import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
-public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -6381758314406968186L;
+public class CloseFundraisingInvestmentResponseAvroModel extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = -4517425531215038879L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"InvestmentPaidAvroModel\",\"namespace\":\"com.temantani.kafka.land.avro.model\",\"fields\":[{\"name\":\"investmentId\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"projectId\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"investorId\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"amount\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":10,\"scale\":2}}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"CloseFundraisingInvestmentResponseAvroModel\",\"namespace\":\"com.temantani.kafka.investment.avro.model\",\"fields\":[{\"name\":\"investmentId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"investorId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"amount\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":10,\"scale\":2}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -25,17 +25,17 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
     MODEL$.addLogicalTypeConversion(new org.apache.avro.Conversions.DecimalConversion());
   }
 
-  private static final BinaryMessageEncoder<InvestmentPaidAvroModel> ENCODER =
-      new BinaryMessageEncoder<InvestmentPaidAvroModel>(MODEL$, SCHEMA$);
+  private static final BinaryMessageEncoder<CloseFundraisingInvestmentResponseAvroModel> ENCODER =
+      new BinaryMessageEncoder<CloseFundraisingInvestmentResponseAvroModel>(MODEL$, SCHEMA$);
 
-  private static final BinaryMessageDecoder<InvestmentPaidAvroModel> DECODER =
-      new BinaryMessageDecoder<InvestmentPaidAvroModel>(MODEL$, SCHEMA$);
+  private static final BinaryMessageDecoder<CloseFundraisingInvestmentResponseAvroModel> DECODER =
+      new BinaryMessageDecoder<CloseFundraisingInvestmentResponseAvroModel>(MODEL$, SCHEMA$);
 
   /**
    * Return the BinaryMessageEncoder instance used by this class.
    * @return the message encoder used by this class
    */
-  public static BinaryMessageEncoder<InvestmentPaidAvroModel> getEncoder() {
+  public static BinaryMessageEncoder<CloseFundraisingInvestmentResponseAvroModel> getEncoder() {
     return ENCODER;
   }
 
@@ -43,7 +43,7 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
    * Return the BinaryMessageDecoder instance used by this class.
    * @return the message decoder used by this class
    */
-  public static BinaryMessageDecoder<InvestmentPaidAvroModel> getDecoder() {
+  public static BinaryMessageDecoder<CloseFundraisingInvestmentResponseAvroModel> getDecoder() {
     return DECODER;
   }
 
@@ -52,12 +52,12 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
    * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
    * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
    */
-  public static BinaryMessageDecoder<InvestmentPaidAvroModel> createDecoder(SchemaStore resolver) {
-    return new BinaryMessageDecoder<InvestmentPaidAvroModel>(MODEL$, SCHEMA$, resolver);
+  public static BinaryMessageDecoder<CloseFundraisingInvestmentResponseAvroModel> createDecoder(SchemaStore resolver) {
+    return new BinaryMessageDecoder<CloseFundraisingInvestmentResponseAvroModel>(MODEL$, SCHEMA$, resolver);
   }
 
   /**
-   * Serializes this InvestmentPaidAvroModel to a ByteBuffer.
+   * Serializes this CloseFundraisingInvestmentResponseAvroModel to a ByteBuffer.
    * @return a buffer holding the serialized data for this instance
    * @throws java.io.IOException if this instance could not be serialized
    */
@@ -66,18 +66,17 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   }
 
   /**
-   * Deserializes a InvestmentPaidAvroModel from a ByteBuffer.
+   * Deserializes a CloseFundraisingInvestmentResponseAvroModel from a ByteBuffer.
    * @param b a byte buffer holding serialized data for an instance of this class
-   * @return a InvestmentPaidAvroModel instance decoded from the given buffer
+   * @return a CloseFundraisingInvestmentResponseAvroModel instance decoded from the given buffer
    * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
    */
-  public static InvestmentPaidAvroModel fromByteBuffer(
+  public static CloseFundraisingInvestmentResponseAvroModel fromByteBuffer(
       java.nio.ByteBuffer b) throws java.io.IOException {
     return DECODER.decode(b);
   }
 
   private java.lang.String investmentId;
-  private java.lang.String projectId;
   private java.lang.String investorId;
   private java.math.BigDecimal amount;
 
@@ -86,18 +85,16 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public InvestmentPaidAvroModel() {}
+  public CloseFundraisingInvestmentResponseAvroModel() {}
 
   /**
    * All-args constructor.
    * @param investmentId The new value for investmentId
-   * @param projectId The new value for projectId
    * @param investorId The new value for investorId
    * @param amount The new value for amount
    */
-  public InvestmentPaidAvroModel(java.lang.String investmentId, java.lang.String projectId, java.lang.String investorId, java.math.BigDecimal amount) {
+  public CloseFundraisingInvestmentResponseAvroModel(java.lang.String investmentId, java.lang.String investorId, java.math.BigDecimal amount) {
     this.investmentId = investmentId;
-    this.projectId = projectId;
     this.investorId = investorId;
     this.amount = amount;
   }
@@ -108,16 +105,14 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return investmentId;
-    case 1: return projectId;
-    case 2: return investorId;
-    case 3: return amount;
+    case 1: return investorId;
+    case 2: return amount;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
 
   private static final org.apache.avro.Conversion<?>[] conversions =
       new org.apache.avro.Conversion<?>[] {
-      null,
       null,
       null,
       new org.apache.avro.Conversions.DecimalConversion(),
@@ -134,9 +129,8 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: investmentId = value$ != null ? value$.toString() : null; break;
-    case 1: projectId = value$ != null ? value$.toString() : null; break;
-    case 2: investorId = value$ != null ? value$.toString() : null; break;
-    case 3: amount = (java.math.BigDecimal)value$; break;
+    case 1: investorId = value$ != null ? value$.toString() : null; break;
+    case 2: amount = (java.math.BigDecimal)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -156,23 +150,6 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
    */
   public void setInvestmentId(java.lang.String value) {
     this.investmentId = value;
-  }
-
-  /**
-   * Gets the value of the 'projectId' field.
-   * @return The value of the 'projectId' field.
-   */
-  public java.lang.String getProjectId() {
-    return projectId;
-  }
-
-
-  /**
-   * Sets the value of the 'projectId' field.
-   * @param value the value to set.
-   */
-  public void setProjectId(java.lang.String value) {
-    this.projectId = value;
   }
 
   /**
@@ -210,48 +187,47 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   }
 
   /**
-   * Creates a new InvestmentPaidAvroModel RecordBuilder.
-   * @return A new InvestmentPaidAvroModel RecordBuilder
+   * Creates a new CloseFundraisingInvestmentResponseAvroModel RecordBuilder.
+   * @return A new CloseFundraisingInvestmentResponseAvroModel RecordBuilder
    */
-  public static com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder newBuilder() {
-    return new com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder();
+  public static com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder newBuilder() {
+    return new com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder();
   }
 
   /**
-   * Creates a new InvestmentPaidAvroModel RecordBuilder by copying an existing Builder.
+   * Creates a new CloseFundraisingInvestmentResponseAvroModel RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new InvestmentPaidAvroModel RecordBuilder
+   * @return A new CloseFundraisingInvestmentResponseAvroModel RecordBuilder
    */
-  public static com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder newBuilder(com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder other) {
+  public static com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder newBuilder(com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder other) {
     if (other == null) {
-      return new com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder();
+      return new com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder();
     } else {
-      return new com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder(other);
+      return new com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder(other);
     }
   }
 
   /**
-   * Creates a new InvestmentPaidAvroModel RecordBuilder by copying an existing InvestmentPaidAvroModel instance.
+   * Creates a new CloseFundraisingInvestmentResponseAvroModel RecordBuilder by copying an existing CloseFundraisingInvestmentResponseAvroModel instance.
    * @param other The existing instance to copy.
-   * @return A new InvestmentPaidAvroModel RecordBuilder
+   * @return A new CloseFundraisingInvestmentResponseAvroModel RecordBuilder
    */
-  public static com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder newBuilder(com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel other) {
+  public static com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder newBuilder(com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel other) {
     if (other == null) {
-      return new com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder();
+      return new com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder();
     } else {
-      return new com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder(other);
+      return new com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder(other);
     }
   }
 
   /**
-   * RecordBuilder for InvestmentPaidAvroModel instances.
+   * RecordBuilder for CloseFundraisingInvestmentResponseAvroModel instances.
    */
   @org.apache.avro.specific.AvroGenerated
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<InvestmentPaidAvroModel>
-    implements org.apache.avro.data.RecordBuilder<InvestmentPaidAvroModel> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<CloseFundraisingInvestmentResponseAvroModel>
+    implements org.apache.avro.data.RecordBuilder<CloseFundraisingInvestmentResponseAvroModel> {
 
     private java.lang.String investmentId;
-    private java.lang.String projectId;
     private java.lang.String investorId;
     private java.math.BigDecimal amount;
 
@@ -264,47 +240,39 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder other) {
+    private Builder(com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.investmentId)) {
         this.investmentId = data().deepCopy(fields()[0].schema(), other.investmentId);
         fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
-      if (isValidValue(fields()[1], other.projectId)) {
-        this.projectId = data().deepCopy(fields()[1].schema(), other.projectId);
+      if (isValidValue(fields()[1], other.investorId)) {
+        this.investorId = data().deepCopy(fields()[1].schema(), other.investorId);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.investorId)) {
-        this.investorId = data().deepCopy(fields()[2].schema(), other.investorId);
+      if (isValidValue(fields()[2], other.amount)) {
+        this.amount = data().deepCopy(fields()[2].schema(), other.amount);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
-      }
-      if (isValidValue(fields()[3], other.amount)) {
-        this.amount = data().deepCopy(fields()[3].schema(), other.amount);
-        fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
     }
 
     /**
-     * Creates a Builder by copying an existing InvestmentPaidAvroModel instance
+     * Creates a Builder by copying an existing CloseFundraisingInvestmentResponseAvroModel instance
      * @param other The existing instance to copy.
      */
-    private Builder(com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel other) {
+    private Builder(com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel other) {
       super(SCHEMA$, MODEL$);
       if (isValidValue(fields()[0], other.investmentId)) {
         this.investmentId = data().deepCopy(fields()[0].schema(), other.investmentId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.projectId)) {
-        this.projectId = data().deepCopy(fields()[1].schema(), other.projectId);
+      if (isValidValue(fields()[1], other.investorId)) {
+        this.investorId = data().deepCopy(fields()[1].schema(), other.investorId);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.investorId)) {
-        this.investorId = data().deepCopy(fields()[2].schema(), other.investorId);
+      if (isValidValue(fields()[2], other.amount)) {
+        this.amount = data().deepCopy(fields()[2].schema(), other.amount);
         fieldSetFlags()[2] = true;
-      }
-      if (isValidValue(fields()[3], other.amount)) {
-        this.amount = data().deepCopy(fields()[3].schema(), other.amount);
-        fieldSetFlags()[3] = true;
       }
     }
 
@@ -322,7 +290,7 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * @param value The value of 'investmentId'.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder setInvestmentId(java.lang.String value) {
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder setInvestmentId(java.lang.String value) {
       validate(fields()[0], value);
       this.investmentId = value;
       fieldSetFlags()[0] = true;
@@ -342,49 +310,9 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * Clears the value of the 'investmentId' field.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder clearInvestmentId() {
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder clearInvestmentId() {
       investmentId = null;
       fieldSetFlags()[0] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'projectId' field.
-      * @return The value.
-      */
-    public java.lang.String getProjectId() {
-      return projectId;
-    }
-
-
-    /**
-      * Sets the value of the 'projectId' field.
-      * @param value The value of 'projectId'.
-      * @return This builder.
-      */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder setProjectId(java.lang.String value) {
-      validate(fields()[1], value);
-      this.projectId = value;
-      fieldSetFlags()[1] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'projectId' field has been set.
-      * @return True if the 'projectId' field has been set, false otherwise.
-      */
-    public boolean hasProjectId() {
-      return fieldSetFlags()[1];
-    }
-
-
-    /**
-      * Clears the value of the 'projectId' field.
-      * @return This builder.
-      */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder clearProjectId() {
-      projectId = null;
-      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -402,10 +330,10 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * @param value The value of 'investorId'.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder setInvestorId(java.lang.String value) {
-      validate(fields()[2], value);
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder setInvestorId(java.lang.String value) {
+      validate(fields()[1], value);
       this.investorId = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -414,7 +342,7 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * @return True if the 'investorId' field has been set, false otherwise.
       */
     public boolean hasInvestorId() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[1];
     }
 
 
@@ -422,9 +350,9 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * Clears the value of the 'investorId' field.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder clearInvestorId() {
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder clearInvestorId() {
       investorId = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -442,10 +370,10 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * @param value The value of 'amount'.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder setAmount(java.math.BigDecimal value) {
-      validate(fields()[3], value);
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder setAmount(java.math.BigDecimal value) {
+      validate(fields()[2], value);
       this.amount = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -454,7 +382,7 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * @return True if the 'amount' field has been set, false otherwise.
       */
     public boolean hasAmount() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[2];
     }
 
 
@@ -462,21 +390,20 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
       * Clears the value of the 'amount' field.
       * @return This builder.
       */
-    public com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel.Builder clearAmount() {
+    public com.temantani.kafka.investment.avro.model.CloseFundraisingInvestmentResponseAvroModel.Builder clearAmount() {
       amount = null;
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public InvestmentPaidAvroModel build() {
+    public CloseFundraisingInvestmentResponseAvroModel build() {
       try {
-        InvestmentPaidAvroModel record = new InvestmentPaidAvroModel();
+        CloseFundraisingInvestmentResponseAvroModel record = new CloseFundraisingInvestmentResponseAvroModel();
         record.investmentId = fieldSetFlags()[0] ? this.investmentId : (java.lang.String) defaultValue(fields()[0]);
-        record.projectId = fieldSetFlags()[1] ? this.projectId : (java.lang.String) defaultValue(fields()[1]);
-        record.investorId = fieldSetFlags()[2] ? this.investorId : (java.lang.String) defaultValue(fields()[2]);
-        record.amount = fieldSetFlags()[3] ? this.amount : (java.math.BigDecimal) defaultValue(fields()[3]);
+        record.investorId = fieldSetFlags()[1] ? this.investorId : (java.lang.String) defaultValue(fields()[1]);
+        record.amount = fieldSetFlags()[2] ? this.amount : (java.math.BigDecimal) defaultValue(fields()[2]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -487,8 +414,8 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumWriter<InvestmentPaidAvroModel>
-    WRITER$ = (org.apache.avro.io.DatumWriter<InvestmentPaidAvroModel>)MODEL$.createDatumWriter(SCHEMA$);
+  private static final org.apache.avro.io.DatumWriter<CloseFundraisingInvestmentResponseAvroModel>
+    WRITER$ = (org.apache.avro.io.DatumWriter<CloseFundraisingInvestmentResponseAvroModel>)MODEL$.createDatumWriter(SCHEMA$);
 
   @Override public void writeExternal(java.io.ObjectOutput out)
     throws java.io.IOException {
@@ -496,8 +423,8 @@ public class InvestmentPaidAvroModel extends org.apache.avro.specific.SpecificRe
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumReader<InvestmentPaidAvroModel>
-    READER$ = (org.apache.avro.io.DatumReader<InvestmentPaidAvroModel>)MODEL$.createDatumReader(SCHEMA$);
+  private static final org.apache.avro.io.DatumReader<CloseFundraisingInvestmentResponseAvroModel>
+    READER$ = (org.apache.avro.io.DatumReader<CloseFundraisingInvestmentResponseAvroModel>)MODEL$.createDatumReader(SCHEMA$);
 
   @Override public void readExternal(java.io.ObjectInput in)
     throws java.io.IOException {

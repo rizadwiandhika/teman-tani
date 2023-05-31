@@ -1,0 +1,30 @@
+{
+  "type": "record",
+  "name": "FundraisingRegisteredAvroModel",
+  "namespace": "com.temantani.kafka.investment.avro.model",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "fundraisingTarget",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
+      "name": "fundraisingDeadline",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

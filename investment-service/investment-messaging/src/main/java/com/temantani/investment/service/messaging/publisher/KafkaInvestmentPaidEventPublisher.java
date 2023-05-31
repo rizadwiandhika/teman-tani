@@ -1,15 +1,24 @@
 package com.temantani.investment.service.messaging.publisher;
 
-import org.springframework.kafka.support.SendResult;
+import java.util.function.BiConsumer;
+
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import com.temantani.investment.service.messaging.mapper.InvestmentMessagingDataMapper;
-import com.temantani.kafka.land.avro.model.InvestmentPaidAvroModel;
-import com.temantani.kafka.producer.service.KafkaProducer;
+import com.temantani.domain.outbox.OutboxStatus;
+import com.temantani.investment.service.domain.outbox.model.investmentpaid.InvestmentPaidOutboxMessage;
+import com.temantani.investment.service.domain.ports.output.publisher.InvestmentPaidEventPublisher;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
-public class KafkaInvestmentPaidEventPublisher {
+public class KafkaInvestmentPaidEventPublisher implements InvestmentPaidEventPublisher {
+
+  @Override
+  public void publish(InvestmentPaidOutboxMessage message,
+      BiConsumer<InvestmentPaidOutboxMessage, OutboxStatus> callback) {
+    log.warn("Ignore publishing InvestmentPaidOutboxMessage");
+  }
 
   // private final KafkaProducer<String, InvestmentPaidAvroModel> producer;
   // private final InvestmentMessagingDataMapper mapper;

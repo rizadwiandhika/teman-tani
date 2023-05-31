@@ -1,6 +1,7 @@
 package com.temantani.investment.service.dataaccess.postgresql.adapter;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -23,12 +24,13 @@ public class InvestmentRepositoryImpl implements InvestmentRepository {
 
   @Override
   public Optional<Investment> findById(InvestmentId investmentId) {
-    return repo.findById(investmentId.getValue()).map(mapper::investmentEntityToInvestment);
+    return repo.findById(investmentId.getValue()).map((i) -> mapper.investmentEntityToInvestment(i, UUID.randomUUID()));
   }
 
-  @Override
-  public Investment save(Investment investment) {
-    return mapper.investmentEntityToInvestment(repo.save(mapper.investmentToInvestmentEntity(investment)));
-  }
+  // @Override
+  // public Investment save(Investment investment) {
+  // return
+  // mapper.investmentEntityToInvestment(repo.save(mapper.investmentToInvestmentEntity(investment)));
+  // }
 
 }
