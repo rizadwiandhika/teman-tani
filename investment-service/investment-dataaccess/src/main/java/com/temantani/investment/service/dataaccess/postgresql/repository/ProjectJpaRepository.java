@@ -9,15 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.temantani.investment.service.dataaccess.postgresql.entity.ProjectEntity;
-import com.temantani.investment.service.domain.valueobject.ProjectStatus;
+import com.temantani.investment.service.dataaccess.postgresql.entity.FundraisingEntity;
+import com.temantani.investment.service.domain.valueobject.FundraisingStatus;
 
 @Repository
-public interface ProjectJpaRepository extends JpaRepository<ProjectEntity, UUID> {
+public interface ProjectJpaRepository extends JpaRepository<FundraisingEntity, UUID> {
 
-  Optional<List<ProjectEntity>> findByStatus(ProjectStatus status);
+  Optional<List<FundraisingEntity>> findByStatus(FundraisingStatus status);
 
-  @Query("SELECT p FROM ProjectEntity p WHERE p.id = (SELECT i.project.id FROM InvestmentEntity i WHERE i.id = :investmentId)")
-  Optional<ProjectEntity> findByInvestmentId(@Param("investmentId") UUID investmentId);
+  @Query("SELECT p FROM ProjectEntity p WHERE p.id = (SELECT i.fundraising.id FROM InvestmentEntity i WHERE i.id = :investmentId)")
+  Optional<FundraisingEntity> findByInvestmentId(@Param("investmentId") UUID investmentId);
 
 }

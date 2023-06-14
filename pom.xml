@@ -171,6 +171,11 @@
       </dependency>
       <dependency>
         <groupId>com.temantani</groupId>
+        <artifactId>project-application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.temantani</groupId>
         <artifactId>project-dataaccess</artifactId>
         <version>${project.version}</version>
       </dependency>

@@ -41,6 +41,7 @@ public class KafkaCloseFundraisingMessageListener implements KafkaConsumer<Close
   private void handle(CloseFundraisingRequestAvroModel model) {
     try {
       listener.closeFundraising(new ProjectId(UUID.fromString(model.getProjectId())));
+      log.info("Fundraising close request has been processed for: {}", model.getProjectId());
     } catch (FundraisingClosedException e) {
       log.warn("Funraising: {} is already closed", model.getProjectId(), e);
       log.warn("Skipping message");

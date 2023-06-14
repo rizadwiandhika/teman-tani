@@ -2,6 +2,8 @@ package com.temantani.land.service.dataaccess.borrower.adapter;
 
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,8 @@ public class BorrowerRepositoryImpl implements BorrowerRepository {
   private final BorrowerJpaRepository borrowerJpaRepository;
   private final BorrowerDataAccessMapper mapper;
 
-  public BorrowerRepositoryImpl(BorrowerJpaRepository borrowerJpaRepository, BorrowerDataAccessMapper mapper) {
+  public BorrowerRepositoryImpl(BorrowerJpaRepository borrowerJpaRepository, BorrowerDataAccessMapper mapper,
+      EntityManager manager) {
     this.borrowerJpaRepository = borrowerJpaRepository;
     this.mapper = mapper;
   }

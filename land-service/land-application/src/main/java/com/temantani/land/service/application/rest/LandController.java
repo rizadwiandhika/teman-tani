@@ -2,7 +2,7 @@ package com.temantani.land.service.application.rest;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -25,24 +25,25 @@ import com.temantani.domain.ports.output.storage.StorageService;
 import com.temantani.domain.valueobject.LandId;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.land.service.domain.dto.proposal.ProposalRequest;
+import com.temantani.land.service.domain.dto.query.LandData;
+import com.temantani.land.service.domain.dto.query.LandDetailsData;
 import com.temantani.land.service.domain.dto.revision.RevisionRequest;
-import com.temantani.land.service.domain.entity.Land;
 import com.temantani.land.service.domain.ports.input.service.LandApplicationService;
-import com.temantani.land.service.domain.ports.output.repository.LandRepository;
+import com.temantani.land.service.domain.ports.input.service.LandQueryService;
 
 @RestController
 @RequestMapping(value = "/lands", produces = "application/json")
 public class LandController {
 
   private final LandApplicationService landApplicationService;
+  private final LandQueryService landQueryService;
   private final StorageService storageService;
-  private final LandRepository landRepository;
 
-  public LandController(LandApplicationService landApplicationService, StorageService storageService,
-      LandRepository landRepository) {
+  public LandController(LandApplicationService landApplicationService, LandQueryService landQueryService,
+      StorageService storageService) {
     this.landApplicationService = landApplicationService;
+    this.landQueryService = landQueryService;
     this.storageService = storageService;
-    this.landRepository = landRepository;
   }
 
   @PostMapping("")
@@ -86,14 +87,16 @@ public class LandController {
     return ResponseEntity.ok(landApplicationService.cancel(new LandId(landId), getAuthenticatedUserId(auth)));
   }
 
-  @GetMapping("/{land_id}")
-  public ResponseEntity<Land> land(@PathVariable("land_id") UUID landId) {
-    Optional<Land> landOp = landRepository.findById(new LandId(landId));
-    if (landOp.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
+  @GetMapping("")
+  public ResponseEntity<List<LandData>> getUserOwnedLands(Authentication auth) {
+    UserId userId = getAuthenticatedUserId(auth);
+    return ResponseEntity.ok(landQueryService.getUserOwnedLands(userId));
+  }
 
-    return ResponseEntity.ok(landOp.get());
+  @GetMapping("/{land_id}")
+  public ResponseEntity<LandDetailsData> land(@PathVariable("land_id") UUID landId, Authentication auth) {
+    UserId userId = getAuthenticatedUserId(auth);
+    return ResponseEntity.ok(landQueryService.getUserLandDetails(userId, new LandId(landId)));
   }
 
   private UserId getAuthenticatedUserId(Authentication auth) {

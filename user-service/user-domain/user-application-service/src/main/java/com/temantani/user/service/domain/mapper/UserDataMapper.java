@@ -43,6 +43,7 @@ public class UserDataMapper {
 
   public UserRegistrationResponse userToUserRegistrationResponse(User user, String message) {
     return UserRegistrationResponse.builder()
+        .userId(user.getId().getValue().toString())
         .email(user.getEmail())
         .message(message)
         .build();

@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "profit_distributions")
+@Table(name = "profit_distribution_details")
 public class ProfitDistributionDetailEntity {
   @Id
   private UUID id;

@@ -15,7 +15,7 @@ import com.temantani.investment.service.domain.dto.common.InvestmentBasicRespons
 import com.temantani.investment.service.domain.dto.create.CreateInvestmentRequest;
 import com.temantani.investment.service.domain.entity.Investment;
 import com.temantani.investment.service.domain.entity.Investor;
-import com.temantani.investment.service.domain.entity.Project;
+import com.temantani.investment.service.domain.entity.Fundraising;
 import com.temantani.investment.service.domain.event.InvestmentCreatedEvent;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
 import com.temantani.investment.service.domain.mapper.InvestmentDataMapper;
@@ -24,7 +24,7 @@ import com.temantani.investment.service.domain.ports.input.service.InvestmentApp
 import com.temantani.investment.service.domain.ports.output.payment.PaymentService;
 import com.temantani.investment.service.domain.ports.output.repository.InvestmentRepository;
 import com.temantani.investment.service.domain.ports.output.repository.InvestorRepository;
-import com.temantani.investment.service.domain.ports.output.repository.ProjectRepository;
+import com.temantani.investment.service.domain.ports.output.repository.FundraisingRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,12 +34,12 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
 
   private final InvestmentRepository investmentRepository;
   private final InvestorRepository investorRepository;
-  private final ProjectRepository projectRepository;
+  private final FundraisingRepository projectRepository;
   private final InvestmentDomainService domainService;
   private final PaymentService paymentService;
 
   public InvestmentApplicationServiceImpl(InvestmentRepository investmentRepository,
-      InvestorRepository investorRepository, ProjectRepository projectRepository, InvestmentDataMapper mapper,
+      InvestorRepository investorRepository, FundraisingRepository projectRepository, InvestmentDataMapper mapper,
       InvestmentDomainService domainService, PaymentService paymentService, InvestmentPaidOutboxHelper helper) {
     this.investmentRepository = investmentRepository;
     this.investorRepository = investorRepository;
@@ -51,7 +51,7 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   @Override
   @Transactional
   public InvestmentBasicResponse cancelInvestment(InvestmentId investmentId, List<String> reasons) {
-    Project project = projectRepository.findByInvestmentId(investmentId)
+    Fundraising project = projectRepository.findByInvestmentId(investmentId)
         .orElseThrow(
             () -> new InvestmentDomainException("Project not found for investment: " + investmentId.getValue()));
 
@@ -72,7 +72,7 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   @Override
   @Transactional
   public InvestmentBasicResponse createInvestment(CreateInvestmentRequest request) {
-    Project project = findProjectByIdOrThrow(new ProjectId(UUID.fromString(request.getProjectId())));
+    Fundraising project = findProjectByIdOrThrow(new ProjectId(UUID.fromString(request.getProjectId())));
     Investor investor = findInvestorByIdOrThrow(request.getInvestorId());
 
     InvestmentCreatedEvent event = domainService.validateAndInitiateInvestment(project, investor,
@@ -98,7 +98,7 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
   @Override
   @Transactional
   public InvestmentBasicResponse payInvestment(InvestmentId investmentId) {
-    Project project = projectRepository.findByInvestmentId(investmentId)
+    Fundraising project = projectRepository.findByInvestmentId(investmentId)
         .orElseThrow(() -> new InvestmentDomainException("Investment not found for: " + investmentId.getValue()));
 
     log.info("Paying investment: {}", investmentId.getValue());
@@ -123,7 +123,7 @@ public class InvestmentApplicationServiceImpl implements InvestmentApplicationSe
         .orElseThrow(() -> new InvestmentDomainException("Investor not found id: " + investorId.getValue().toString()));
   }
 
-  private Project findProjectByIdOrThrow(ProjectId projectId) {
+  private Fundraising findProjectByIdOrThrow(ProjectId projectId) {
     return projectRepository.findById(projectId)
         .orElseThrow(() -> new InvestmentDomainException("Project not found id: " + projectId.getValue().toString()));
   }

@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,7 +30,7 @@ public class ProfitDistributionEntity {
   @Id
   private UUID id;
 
-  @OneToMany(mappedBy = "profitDistribution")
+  @OneToMany(mappedBy = "profitDistribution", cascade = CascadeType.ALL)
   private List<ProfitDistributionDetailEntity> details;
 
   @Enumerated(EnumType.STRING)

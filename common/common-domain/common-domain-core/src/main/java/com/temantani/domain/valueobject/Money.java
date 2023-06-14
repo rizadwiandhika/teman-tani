@@ -40,9 +40,9 @@ public class Money {
     return new Money(setScale(amount.multiply(multiplier)));
   }
 
-  public Money divide(Money divisor) {
+  public BigDecimal divide(Money divisor) {
     BigDecimal quotient = amount.divide(divisor.getAmount());
-    return new Money(setScale(quotient));
+    return quotient.setScale(2);
   }
 
   private BigDecimal setScale(BigDecimal input) {

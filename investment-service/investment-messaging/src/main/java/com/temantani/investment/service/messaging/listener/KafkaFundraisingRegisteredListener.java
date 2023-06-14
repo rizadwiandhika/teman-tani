@@ -43,8 +43,10 @@ public class KafkaFundraisingRegisteredListener implements KafkaConsumer<Fundrai
     try {
       listener.registerFundraisingProject(
           UUID.fromString(model.getId()),
+          model.getDescription(),
           new Money(model.getFundraisingTarget()),
           model.getFundraisingDeadline().atZone(ZoneId.of(DomainConstant.TIMEZONE)));
+      log.info("Fundraising was registered for: {}", model.getId());
     } catch (DataAlreadyExistsException e) {
       log.warn("Project is already exists: {}", model.getId());
       log.warn("Skipping message");

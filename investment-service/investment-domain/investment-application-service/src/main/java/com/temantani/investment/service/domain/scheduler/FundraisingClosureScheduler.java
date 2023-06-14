@@ -14,6 +14,7 @@ public class FundraisingClosureScheduler {
 
   @Scheduled(initialDelayString = "${investment-service.fundraising-closure-scheduler-initial-delay}", fixedDelayString = "${investment-service.fundraising-closure-scheduler-fixed-delay}")
   public void closeFundraisingScheduler() {
+    // helper.cancelExpiredInvestments();
     helper.closeForAllClosingFundraising();
   }
 

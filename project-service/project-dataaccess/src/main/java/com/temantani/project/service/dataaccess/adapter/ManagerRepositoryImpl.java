@@ -2,29 +2,33 @@ package com.temantani.project.service.dataaccess.adapter;
 
 import java.util.Optional;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.project.service.dataaccess.mapper.ProjectDataAccessMapper;
 import com.temantani.project.service.dataaccess.repository.ManagerJpaRepository;
+import com.temantani.project.service.dataaccess.util.ProjectDataAccessUtil;
 import com.temantani.project.service.domain.entity.Manager;
 import com.temantani.project.service.domain.ports.output.repository.ManagerRepository;
 
-@Repository
+@Component
 public class ManagerRepositoryImpl implements ManagerRepository {
 
   private final ManagerJpaRepository repo;
   private final ProjectDataAccessMapper mapper;
   private final EntityManager manager;
+  private final ProjectDataAccessUtil util;
 
-  public ManagerRepositoryImpl(ManagerJpaRepository repo, ProjectDataAccessMapper mapper, EntityManager manager) {
+  public ManagerRepositoryImpl(ManagerJpaRepository repo, ProjectDataAccessMapper mapper, EntityManager manager,
+      ProjectDataAccessUtil util) {
     this.repo = repo;
     this.mapper = mapper;
     this.manager = manager;
+    this.util = util;
   }
 
   @Override
@@ -39,8 +43,11 @@ public class ManagerRepositoryImpl implements ManagerRepository {
       this.manager.flush();
 
       return repo.findById(manager.getId().getValue()).map(mapper::managerEntityToManager).orElse(null);
-    } catch (EntityExistsException e) {
-      throw new DataAlreadyExistsException("Manager already exists: " + manager.getId().getValue());
+    } catch (PersistenceException e) {
+      if (util.isUniqueViolation(e)) {
+        throw new DataAlreadyExistsException("Manager already exists: " + manager.getId().getValue(), e);
+      }
+      throw e;
     }
   }
 

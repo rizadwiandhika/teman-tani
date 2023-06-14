@@ -12,22 +12,24 @@ import com.temantani.domain.valueobject.BankAccount;
 import com.temantani.domain.valueobject.LandId;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.UserId;
-import com.temantani.project.service.domain.dto.profitdistribution.TrackProfitDistributionResponse;
 import com.temantani.project.service.domain.dto.project.BaseProjectResponse;
 import com.temantani.project.service.domain.dto.project.CreateExpenseRequest;
 import com.temantani.project.service.domain.dto.project.CreateProjectRequest;
 import com.temantani.project.service.domain.dto.project.CreateProjectResponse;
+import com.temantani.project.service.domain.dto.query.TrackProfitDistributionResponse;
 import com.temantani.project.service.domain.entity.Expense;
 import com.temantani.project.service.domain.entity.Land;
 import com.temantani.project.service.domain.entity.Manager;
 import com.temantani.project.service.domain.entity.ProfitDistribution;
 import com.temantani.project.service.domain.entity.Project;
 import com.temantani.project.service.domain.entity.Receiver;
+import com.temantani.project.service.domain.entity.ShareHolder;
 import com.temantani.project.service.domain.event.ProjectCreatedEvent;
-import com.temantani.project.service.domain.event.ProjectStatusUpdatedEvent;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
 import com.temantani.project.service.domain.mapper.ProjectDataMapper;
-import com.temantani.project.service.domain.outbox.scheduler.ProjectStatusUpdatedOutboxHelper;
+import com.temantani.project.service.domain.outbox.model.closefundraisingrequested.CloseFundraisingRqeustedEventPayload;
+import com.temantani.project.service.domain.outbox.scheduler.closefundraisingrequested.CloseFundraisingRequestedOutboxHelper;
+import com.temantani.project.service.domain.outbox.scheduler.fundraisingregistered.FundraisingRegisteredOutboxHelper;
 import com.temantani.project.service.domain.ports.input.service.ProjectApplicationService;
 import com.temantani.project.service.domain.ports.output.repository.LandRepository;
 import com.temantani.project.service.domain.ports.output.repository.ManagerRepository;
@@ -36,7 +38,6 @@ import com.temantani.project.service.domain.ports.output.repository.ProjectRepos
 import com.temantani.project.service.domain.ports.output.repository.ReceiverRepository;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
-import com.temantani.project.service.domain.valueobject.ProfitReceiver;
 
 @Service
 public class ProjectApplicationServiceImpl implements ProjectApplicationService {
@@ -48,12 +49,14 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
   private final ProjectRepository projectRepository;
   private final ReceiverRepository receiverRepository;
   private final ProfitDistributionRepository profitDistributionRepository;
-  private final ProjectStatusUpdatedOutboxHelper projectStatusUpdatedOutboxHelper;
+  private final FundraisingRegisteredOutboxHelper fundraisingRegisteredOutboxHelper;
+  private final CloseFundraisingRequestedOutboxHelper closeFundraisingRequestedOutboxHelper;
 
   public ProjectApplicationServiceImpl(DomainService domainService, ProjectDataMapper mapper,
       ManagerRepository managerRepository, LandRepository landRepository, ProjectRepository projectRepository,
       ReceiverRepository receiverRepository, ProfitDistributionRepository profitDistributionRepository,
-      ProjectStatusUpdatedOutboxHelper projectStatusUpdatedOutboxHelper) {
+      FundraisingRegisteredOutboxHelper fundraisingRegisteredOutboxHelper,
+      CloseFundraisingRequestedOutboxHelper closeFundraisingRequestedOutboxHelper) {
     this.domainService = domainService;
     this.mapper = mapper;
     this.managerRepository = managerRepository;
@@ -61,7 +64,8 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
     this.projectRepository = projectRepository;
     this.receiverRepository = receiverRepository;
     this.profitDistributionRepository = profitDistributionRepository;
-    this.projectStatusUpdatedOutboxHelper = projectStatusUpdatedOutboxHelper;
+    this.fundraisingRegisteredOutboxHelper = fundraisingRegisteredOutboxHelper;
+    this.closeFundraisingRequestedOutboxHelper = closeFundraisingRequestedOutboxHelper;
   }
 
   @Override
@@ -75,8 +79,9 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
 
     projectRepository.save(project);
     landRepository.save(land);
-    projectStatusUpdatedOutboxHelper
-        .createProjectStatusUpdatedOutbox(mapper.projectCreatedEventToProjectStatusUpdatedEventPayload(event));
+
+    fundraisingRegisteredOutboxHelper
+        .createOutbox(mapper.projectCreatedEventToFundraisingRegisteredEventPayload(event));
 
     return mapper.projectToCreateProjectResponse(project);
   }
@@ -87,16 +92,18 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
     findManagerByIdOrThrow(managerId);
     Project project = findProjectByIdOrThrow(projectId);
 
-    ProjectStatusUpdatedEvent event = domainService.continueProjectToHiring(managerId, project);
-
-    // ? Should i improve this using Saga since investment service should close the
-    // ? project first the we're good to go to hiring
+    domainService.intiateToHiring(managerId, project);
 
     projectRepository.save(project);
-    projectStatusUpdatedOutboxHelper
-        .createProjectStatusUpdatedOutbox(mapper.projectStatusUpdatedEventToProjectStatusUpdatedEventPayload(event));
+    closeFundraisingRequestedOutboxHelper
+        .createOutbox(new CloseFundraisingRqeustedEventPayload(project.getId().getValue()));
 
-    return mapper.projectStatusUpdatedEventToBaseProjectResponse(event);
+    return BaseProjectResponse.builder()
+        .projectId(project.getId().getValue())
+        .managerId(project.getManagerId().getValue())
+        .landId(project.getLandId().getValue())
+        .status(project.getStatus())
+        .build();
   }
 
   @Override
@@ -105,13 +112,16 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
     findManagerByIdOrThrow(managerId);
     Project project = findProjectByIdOrThrow(projectId);
 
-    ProjectStatusUpdatedEvent event = domainService.executeProject(managerId, project);
+    domainService.executeProject(managerId, project);
 
     projectRepository.save(project);
-    projectStatusUpdatedOutboxHelper
-        .createProjectStatusUpdatedOutbox(mapper.projectStatusUpdatedEventToProjectStatusUpdatedEventPayload(event));
 
-    return mapper.projectStatusUpdatedEventToBaseProjectResponse(event);
+    return BaseProjectResponse.builder()
+        .projectId(project.getId().getValue())
+        .managerId(project.getManagerId().getValue())
+        .landId(project.getLandId().getValue())
+        .status(project.getStatus())
+        .build();
   }
 
   @Override
@@ -122,14 +132,17 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
     Project project = findProjectByIdOrThrow(projectId);
     Land land = findLandByIdOrThrow(project.getLandId());
 
-    ProjectStatusUpdatedEvent event = domainService.finishProject(managerId, project, land);
+    domainService.finishProject(managerId, project, land);
 
     projectRepository.save(project);
     landRepository.save(land);
-    projectStatusUpdatedOutboxHelper
-        .createProjectStatusUpdatedOutbox(mapper.projectStatusUpdatedEventToProjectStatusUpdatedEventPayload(event));
 
-    return mapper.projectStatusUpdatedEventToBaseProjectResponse(event);
+    return BaseProjectResponse.builder()
+        .projectId(project.getId().getValue())
+        .managerId(project.getManagerId().getValue())
+        .landId(project.getLandId().getValue())
+        .status(project.getStatus())
+        .build();
   }
 
   @Override
@@ -148,15 +161,15 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
 
   @Override
   @Transactional
-  public TrackProfitDistributionResponse intiateProfitDistribution(UserId managerId, ProjectId projectId) {
+  public TrackProfitDistributionResponse generateProfitDistribution(UserId managerId, ProjectId projectId) {
     Project project = findProjectByIdOrThrow(projectId);
 
-    List<UserId> receiverIds = project.getProfitReceivers().stream().map(ProfitReceiver::getReceiverId).toList();
+    List<UserId> receiverIds = project.getShareHolders().stream().map(ShareHolder::getReceiverId).toList();
     List<Receiver> receivers = findReceiversByIdIn(receiverIds);
     Map<UserId, BankAccount> receiverBank = receivers.stream()
         .collect(Collectors.toMap(Receiver::getId, Receiver::getBankAccount));
 
-    ProfitDistribution profitDistribution = domainService.initiateProfitDistribution(managerId, project, receiverBank);
+    ProfitDistribution profitDistribution = domainService.generateProfitDistribution(managerId, project, receiverBank);
 
     profitDistribution = profitDistributionRepository.save(profitDistribution);
 

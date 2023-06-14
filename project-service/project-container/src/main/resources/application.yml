@@ -13,7 +13,7 @@ spring:
   sql:
     init:
       mode: ALWAYS
-      schema-locations: classpath:init-schema.sql, classpath:init-data.sql
+      schema-locations: classpath:init-schema.sql
       platform: postgres
   jpa:
     database: postgresql
@@ -30,3 +30,51 @@ spring:
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
+
+project-service:
+  user-topic-name: user
+  fundraising-registered-topic-name: fundraising-registered
+  land-registered-topic-name: land-registered
+  close-fundraising-request-topic-name: close-fundraising-request
+  close-fundraising-response-topic-name: close-fundraising-response
+  outbox-scheduler-fixed-delay: 10000
+  outbox-scheduler-initial-delay: 5000
+
+kafka-config:
+  bootstrap-servers: 127.0.0.1:19092,127.0.0.1:29092,127.0.0.1:39092
+  schema-registry-url-key: schema.registry.url
+  schema-registry-url: http://127.0.0.1:8081
+  num-of-partitions: 3
+  replication-factor: 3
+
+kafka-producer-config:
+  key-serializer-class: org.apache.kafka.common.serialization.StringSerializer
+  value-serializer-class: io.confluent.kafka.serializers.KafkaAvroSerializer
+  compression-type: snappy
+  acks: all
+  batch-size: 16384
+  batch-size-boost-factor: 100
+  linger-ms: 5
+  request-timeout-ms: 60000
+  retry-count: 5
+
+kafka-consumer-config:
+  user-consumer-group-id: project-service-user-topic-consumer
+  land-registered-consumer-group-id: project-service-land-registered-topic-consumer
+  close-fundraising-response-consumer-group-id: project-service-close-fundraising-response-topic-consumer
+
+  key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  auto-offset-reset: earliest
+  specific-avro-reader-key: specific.avro.reader
+  specific-avro-reader: true
+  batch-listener: true
+  auto-startup: true
+  concurency-level: 3
+  session-timeout-ms: 10000
+  heartbeat-interval-ms: 3000
+  max-poll-interval-ms: 300000
+  max-poll-records: 500
+  max-partition-fetch-bytes-default: 1048576
+  max-partition-fetch-bytes-boost-factor: 1
+  poll-timeout-ms: 150

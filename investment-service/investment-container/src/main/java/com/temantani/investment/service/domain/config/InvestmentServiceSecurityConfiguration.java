@@ -1,9 +1,5 @@
 package com.temantani.investment.service.domain.config;
 
-import static com.temantani.domain.valueobject.UserRole.INVESTOR;
-
-import java.util.Arrays;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +8,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.temantani.domain.valueobject.UserRole;
 import com.temantani.security.exceptionhandler.CustomAccessDeniedHandler;
 import com.temantani.security.exceptionhandler.CustomAuthenticationEntryPoint;
 import com.temantani.security.filter.JwtAuthFilter;

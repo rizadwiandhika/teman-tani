@@ -2,19 +2,20 @@ package com.temantani.project.service.dataaccess.util;
 
 import java.sql.SQLException;
 
+import javax.persistence.PersistenceException;
+
 import org.postgresql.util.PSQLState;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProjectDataAccessUtil {
 
-  public Boolean isUniqueViolation(DataAccessException e) {
-    if (e.getRootCause() instanceof SQLException == false) {
+  public Boolean isUniqueViolation(PersistenceException e) {
+    if (e.getCause().getCause() instanceof SQLException == false) {
       return false;
     }
 
-    SQLException sqlException = (SQLException) e.getRootCause();
+    SQLException sqlException = (SQLException) e.getCause().getCause();
     return sqlException != null && sqlException.getSQLState() != null
         && PSQLState.UNIQUE_VIOLATION.getState().equals(sqlException.getSQLState());
   }

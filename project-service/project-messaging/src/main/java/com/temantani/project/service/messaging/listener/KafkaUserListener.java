@@ -44,22 +44,30 @@ public class KafkaUserListener implements KafkaConsumer<UserAvroModel> {
       try {
         if (message.getActivatedRole().equals("ADMIN_PROJECT")) {
           listener.createManager(mapper.userAvroModelToManagerRegisteredMessage(message));
+          log.info("{} was created: {}", message.getActivatedRole(), message.toString());
+          return;
         }
 
         if (message.getActivatedRole().equals("LANDOWNER") || message.getActivatedRole().equals("INVESTOR")) {
           listener.createReceiver(mapper.userAvroModelToReceiverRegisteredMessage(message));
+          log.info("{} was created: {}", message.getActivatedRole(), message.toString());
+          return;
         }
 
       } catch (DataAlreadyExistsException e) {
         // Do nothing since it is a duplicate message
         log.warn("({}) {} is already exists. Ignoring message", message.getUserId(), message.getActivatedRole());
+        return;
       }
+
+      log.warn("Ignoring user message role: ({}) {}", message.getActivatedRole(), message.getUserId());
       return;
     }
 
     if (message.getType().equals("PROFILE_UPDATED")) {
       try {
         listener.updateReceiverBank(mapper.userAvroModelToReceiverProfileUpdatedMessage(message));
+        log.info("{} bank account was updated: {}", message.getUserId(), message.toString());
       } catch (SameBankAccountException e) {
         log.warn("Ignoring message since bank account is the same as the old one");
       }

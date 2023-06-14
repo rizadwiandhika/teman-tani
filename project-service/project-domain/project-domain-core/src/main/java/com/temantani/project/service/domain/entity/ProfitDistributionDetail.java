@@ -4,14 +4,13 @@ import com.temantani.domain.entity.BaseEntity;
 import com.temantani.domain.valueobject.BankAccount;
 import com.temantani.domain.valueobject.Money;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
-import com.temantani.project.service.domain.valueobject.ProfitReceiver;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 
 public class ProfitDistributionDetail extends BaseEntity<ProfitDistributionDetailId> {
 
   private final ProfitDistributionId profitDistributionId;
-  private final ProfitReceiver receiver;
+  private final ShareHolder receiver;
   private final BankAccount bankAccount;
 
   private final Money amount;
@@ -32,7 +31,7 @@ public class ProfitDistributionDetail extends BaseEntity<ProfitDistributionDetai
     return profitDistributionId;
   }
 
-  public ProfitReceiver getReceiver() {
+  public ShareHolder getReceiver() {
     return receiver;
   }
 
@@ -61,7 +60,7 @@ public class ProfitDistributionDetail extends BaseEntity<ProfitDistributionDetai
   public static class Builder {
     private ProfitDistributionDetailId id;
     private ProfitDistributionId profitDistributionId;
-    private ProfitReceiver receiver;
+    private ShareHolder receiver;
     private BankAccount bankAccount;
     private Money amount;
     private String transferProofUrl;
@@ -76,7 +75,7 @@ public class ProfitDistributionDetail extends BaseEntity<ProfitDistributionDetai
       return this;
     }
 
-    public Builder receiver(ProfitReceiver receiver) {
+    public Builder receiver(ShareHolder receiver) {
       this.receiver = receiver;
       return this;
     }

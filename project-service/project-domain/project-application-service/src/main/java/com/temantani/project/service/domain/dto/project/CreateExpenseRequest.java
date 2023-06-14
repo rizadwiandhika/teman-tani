@@ -1,7 +1,6 @@
 package com.temantani.project.service.domain.dto.project;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;
 
@@ -23,8 +22,7 @@ public class CreateExpenseRequest {
   @NotNull
   private BigDecimal amount;
 
-  @NotNull
-  private ZonedDateTime createdAt;
+  // private ZonedDateTime createdAt;
 
   private String invoiceUrl;
 

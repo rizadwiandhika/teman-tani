@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,23 +28,33 @@ import com.temantani.domain.ports.output.storage.StorageService;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.UserId;
 import com.temantani.project.service.domain.dto.project.CreateExpenseRequest;
-import com.temantani.project.service.domain.dto.profitdistribution.TrackProfitDistributionResponse;
 import com.temantani.project.service.domain.dto.project.BaseProjectResponse;
 import com.temantani.project.service.domain.dto.project.CreateProjectRequest;
 import com.temantani.project.service.domain.dto.project.CreateProjectResponse;
+import com.temantani.project.service.domain.dto.query.ProjectData;
+import com.temantani.project.service.domain.dto.query.TrackProfitDistributionResponse;
 import com.temantani.project.service.domain.ports.input.service.ProjectApplicationService;
+import com.temantani.project.service.domain.ports.input.service.ProjectQueryService;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(value = "/admins", produces = "application/json")
 public class AdminController {
   private final ProjectApplicationService applicationService;
+  private final ProjectQueryService projectQueryService;
   private final StorageService storageService;
 
-  public AdminController(ProjectApplicationService applicationService, StorageService storageService) {
+  public AdminController(ProjectApplicationService applicationService, ProjectQueryService projectQueryService,
+      StorageService storageService) {
     this.applicationService = applicationService;
+    this.projectQueryService = projectQueryService;
     this.storageService = storageService;
+  }
+
+  @GetMapping("/projects")
+  public ResponseEntity<List<ProjectData>> getProjects() {
+    return ResponseEntity.ok(projectQueryService.getProjects());
   }
 
   @PostMapping("/projects")
@@ -76,10 +88,15 @@ public class AdminController {
 
   @PostMapping("/projects/{project_id}/expenses")
   public ResponseEntity<BasicResponse> addExpense(
-      @RequestBody @Valid CreateExpenseRequest request,
+      @ModelAttribute @Valid CreateExpenseRequest request,
+      @RequestParam("invoice") MultipartFile invoice,
       @PathVariable("project_id") UUID projectId,
-      Authentication auth) {
+      Authentication auth) throws IOException {
     UserId managerId = getUserId(auth);
+
+    String invoicePath = storageService.save(invoice.getInputStream(), Path.of(invoice.getOriginalFilename()));
+    request.setInvoiceUrl(invoicePath);
+
     return ResponseEntity.ok(applicationService.addProjectExpense(managerId, new ProjectId(projectId), request));
   }
 
@@ -88,12 +105,11 @@ public class AdminController {
       @PathVariable("project_id") UUID projectId,
       Authentication auth) {
     UserId managerId = getUserId(auth);
-    return ResponseEntity.ok(applicationService.intiateProfitDistribution(managerId, new ProjectId(projectId)));
+    return ResponseEntity.ok(applicationService.generateProfitDistribution(managerId, new ProjectId(projectId)));
   }
 
-  @PutMapping("/profit-distributions/{profit_distribution_id}")
+  @PostMapping("/profit-distributions/{profit_distribution_id}")
   public ResponseEntity<TrackProfitDistributionResponse> transfer(
-      @PathVariable("project_id") UUID projectId,
       @PathVariable("profit_distribution_id") UUID profitDistributionId,
       @RequestParam("proofs") List<MultipartFile> files,
       @RequestParam("profitDistributionDetailIds") List<String> profitDistributionDetailIds,
@@ -104,7 +120,7 @@ public class AdminController {
     for (int index = 0; index < files.size(); index++) {
       MultipartFile file = files.get(index);
       String location = storageService.saveTemporary(file.getInputStream(), Path.of(file.getOriginalFilename()));
-      transferProof.put(new ProfitDistributionDetailId(profitDistributionId), location);
+      transferProof.put(ProfitDistributionDetailId.fromString(profitDistributionDetailIds.get(index)), location);
     }
 
     return ResponseEntity.ok(applicationService.completeProfitDistribution(

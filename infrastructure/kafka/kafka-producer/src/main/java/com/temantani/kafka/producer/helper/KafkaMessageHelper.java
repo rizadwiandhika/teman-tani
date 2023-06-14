@@ -2,6 +2,7 @@ package com.temantani.kafka.producer.helper;
 
 import java.util.function.BiConsumer;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
@@ -21,8 +22,7 @@ public class KafkaMessageHelper {
     this.mapper = mapper;
   }
 
-  // TODO fix into avro model
-  public <T, U> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(
+  public <T extends SpecificRecordBase, U> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(
       String responseTopicName,
       T avroModel,
       U outboxMessage,

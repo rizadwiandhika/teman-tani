@@ -26,8 +26,9 @@ import com.temantani.project.service.dataaccess.entity.ProfitDistributionDetailE
 import com.temantani.project.service.dataaccess.entity.ProfitDistributionEntity;
 import com.temantani.project.service.dataaccess.entity.ProfitReceiverEntity;
 import com.temantani.project.service.dataaccess.entity.ProjectEntity;
-import com.temantani.project.service.dataaccess.entity.ProjectStatusUpdatedOutboxMessageEntity;
+import com.temantani.project.service.dataaccess.entity.OutboxEntity;
 import com.temantani.project.service.dataaccess.entity.ReceiverEntity;
+import com.temantani.project.service.dataaccess.entity.type.OutboxType;
 import com.temantani.project.service.domain.entity.Expense;
 import com.temantani.project.service.domain.entity.Investment;
 import com.temantani.project.service.domain.entity.Land;
@@ -36,12 +37,13 @@ import com.temantani.project.service.domain.entity.ProfitDistribution;
 import com.temantani.project.service.domain.entity.ProfitDistributionDetail;
 import com.temantani.project.service.domain.entity.Project;
 import com.temantani.project.service.domain.entity.Receiver;
+import com.temantani.project.service.domain.entity.ShareHolder;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
-import com.temantani.project.service.domain.outbox.model.ProjectStatusUpdatedOutboxMessage;
+import com.temantani.project.service.domain.outbox.model.closefundraisingrequested.CloseFundraisingRequestedOutboxMessage;
+import com.temantani.project.service.domain.outbox.model.fundraisingregistered.FundraisingRegisteredOutboxMessage;
 import com.temantani.project.service.domain.valueobject.ExpenseId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
-import com.temantani.project.service.domain.valueobject.ProfitReceiver;
 
 @Component
 public class ProjectDataAccessMapper {
@@ -127,9 +129,11 @@ public class ProjectDataAccessMapper {
         .id(project.getId().getValue())
         .status(project.getStatus())
         .version(project.getVersion())
-        .profitReceivers(project.getProfitReceivers().stream().map(this::profitReceiverToProfitReceiverEntity)
-            .collect(Collectors.toList()))
-        .expenses(project.getExpenses().stream().map(this::expenseToExpenseEntity).collect(Collectors.toList()))
+        .profitReceivers(project.getShareHolders() == null ? new ArrayList<>()
+            : project.getShareHolders().stream().map(this::profitReceiverToProfitReceiverEntity)
+                .collect(Collectors.toList()))
+        .expenses(project.getExpenses() == null ? new ArrayList<>()
+            : project.getExpenses().stream().map(this::expenseToExpenseEntity).collect(Collectors.toList()))
         .landId(project.getLandId().getValue())
         .managerId(project.getManagerId().getValue())
         .description(project.getDescription())
@@ -145,7 +149,9 @@ public class ProjectDataAccessMapper {
         .createdAt(project.getCreatedAt())
         .executedAt(project.getExecutedAt())
         .finishedAt(project.getFinishedAt())
-        .failureMessages(String.join(Project.FAILURE_MESSAGES_DELIMITER, project.getFailureMessages()))
+        .failureMessages(project.getFailureMessages() == null || project.getFailureMessages().size() == 0
+            ? null
+            : String.join(Project.FAILURE_MESSAGES_DELIMITER, project.getFailureMessages()))
         .build();
 
     entity.getProfitReceivers().forEach((p) -> p.setProject(entity));
@@ -154,8 +160,9 @@ public class ProjectDataAccessMapper {
     return entity;
   }
 
-  public ProfitReceiverEntity profitReceiverToProfitReceiverEntity(ProfitReceiver receiver) {
+  public ProfitReceiverEntity profitReceiverToProfitReceiverEntity(ShareHolder receiver) {
     return ProfitReceiverEntity.builder()
+        .id(receiver.getId())
         .type(receiver.getType())
         .receiverId(receiver.getReceiverId().getValue())
         .devidend(receiver.getDevidend())
@@ -178,9 +185,11 @@ public class ProjectDataAccessMapper {
         .id(new ProjectId(entity.getId()))
         .status(entity.getStatus())
         .version(entity.getVersion())
-        .profitReceivers(entity.getProfitReceivers().stream().map(this::profitReceiverEntityToProfitReceiver)
-            .collect(Collectors.toList()))
-        .expenses(entity.getExpenses().stream().map(this::expenseEntityToExpense).collect(Collectors.toList()))
+        .profitReceivers(entity.getProfitReceivers() == null ? new ArrayList<>()
+            : entity.getProfitReceivers().stream().map(this::profitReceiverEntityToProfitReceiver)
+                .collect(Collectors.toList()))
+        .expenses(entity.getExpenses() == null ? new ArrayList<>()
+            : entity.getExpenses().stream().map(this::expenseEntityToExpense).collect(Collectors.toList()))
         .landId(new LandId(entity.getLandId()))
         .managerId(new UserId(entity.getManagerId()))
         .description(entity.getDescription())
@@ -197,12 +206,15 @@ public class ProjectDataAccessMapper {
         .executedAt(entity.getExecutedAt())
         .finishedAt(entity.getFinishedAt())
         .failureMessages(
-            new ArrayList<>(Arrays.asList(entity.getFailureMessages().split(Project.FAILURE_MESSAGES_DELIMITER))))
+            entity.getFailureMessages() == null || entity.getFailureMessages().trim().length() == 0
+                ? new ArrayList<>()
+                : new ArrayList<>(Arrays.asList(entity.getFailureMessages().split(Project.FAILURE_MESSAGES_DELIMITER))))
         .build();
   }
 
-  public ProfitReceiver profitReceiverEntityToProfitReceiver(ProfitReceiverEntity entity) {
-    return ProfitReceiver.builder()
+  public ShareHolder profitReceiverEntityToProfitReceiver(ProfitReceiverEntity entity) {
+    return ShareHolder.builder()
+        .id(entity.getId())
         .deviden(entity.getDevidend())
         .receiverId(new UserId(entity.getReceiverId()))
         .type(entity.getType())
@@ -272,7 +284,7 @@ public class ProjectDataAccessMapper {
     return ProfitDistributionDetail.builder()
         .id(new ProfitDistributionDetailId(entity.getId()))
         .profitDistributionId(new ProfitDistributionId(entity.getProfitDistribution().getId()))
-        .receiver(ProfitReceiver.builder()
+        .receiver(ShareHolder.builder()
             .deviden(entity.getDevidend())
             .receiverId(new UserId(entity.getReceiverId()))
             .type(entity.getType())
@@ -283,11 +295,12 @@ public class ProjectDataAccessMapper {
         .build();
   }
 
-  public ProjectStatusUpdatedOutboxMessageEntity projectStatusUpdatedOutboxMessageToProjectStatusUpdatedOutboxMessage(
-      ProjectStatusUpdatedOutboxMessage outbox) {
-    return ProjectStatusUpdatedOutboxMessageEntity.builder()
+  public OutboxEntity fundraisingRegisteredOutboxMessageToFundraisingRegisteredOutboxEntity(
+      FundraisingRegisteredOutboxMessage outbox) {
+    return OutboxEntity.builder()
         .id(outbox.getId())
         .version(outbox.getVersion())
+        .type(OutboxType.FUNDRAISING_REGISTERED)
         .outboxStatus(outbox.getOutboxStatus())
         .payload(outbox.getPayload())
         .createdAt(outbox.getCreatedAt())
@@ -295,13 +308,38 @@ public class ProjectDataAccessMapper {
         .build();
   }
 
-  public ProjectStatusUpdatedOutboxMessage projectStatusUpdatedOutboxMessageEntityToProjectStatusUpdatedOutboxMessage(
-      ProjectStatusUpdatedOutboxMessageEntity entity) {
-    return ProjectStatusUpdatedOutboxMessage.builder()
+  public OutboxEntity closeFundraisingRequestedOutboxMessageToCloseFundraisingRequestedOutboxEntity(
+      CloseFundraisingRequestedOutboxMessage outbox) {
+    return OutboxEntity.builder()
+        .id(outbox.getId())
+        .version(outbox.getVersion())
+        .type(OutboxType.CLOSE_FUNDRAISING_REQUESTED)
+        .outboxStatus(outbox.getOutboxStatus())
+        .payload(outbox.getPayload())
+        .createdAt(outbox.getCreatedAt())
+        .processedAt(outbox.getProcessedAt())
+        .build();
+  }
+
+  public FundraisingRegisteredOutboxMessage fundraisingRegisteredOutboxEntityToFundraisingRegisteredOutboxMessage(
+      OutboxEntity entity) {
+    return FundraisingRegisteredOutboxMessage.builder()
         .id(entity.getId())
         .payload(entity.getPayload())
         .version(entity.getVersion())
         .outboxStatus(entity.getOutboxStatus())
+        .createdAt(entity.getCreatedAt())
+        .processedAt(entity.getProcessedAt())
+        .build();
+  }
+
+  public CloseFundraisingRequestedOutboxMessage closeFundraisingRequestedOutboxEntityToCloseFundraisingRqeustedOutboxMessage(
+      OutboxEntity entity) {
+    return CloseFundraisingRequestedOutboxMessage.builder()
+        .id(entity.getId())
+        .outboxStatus(entity.getOutboxStatus())
+        .payload(entity.getPayload())
+        .version(entity.getVersion())
         .createdAt(entity.getCreatedAt())
         .processedAt(entity.getProcessedAt())
         .build();

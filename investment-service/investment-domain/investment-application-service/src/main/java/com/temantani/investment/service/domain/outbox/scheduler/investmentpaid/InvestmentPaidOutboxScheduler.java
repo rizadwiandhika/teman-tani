@@ -11,11 +11,9 @@ import com.temantani.investment.service.domain.ports.output.publisher.Investment
 public class InvestmentPaidOutboxScheduler implements OutboxScheduler {
 
   private final InvestmentPaidOutboxHelper helper;
-  private final InvestmentPaidEventPublisher publisher;
 
   public InvestmentPaidOutboxScheduler(InvestmentPaidOutboxHelper helper, InvestmentPaidEventPublisher publisher) {
     this.helper = helper;
-    this.publisher = publisher;
   }
 
   @Override

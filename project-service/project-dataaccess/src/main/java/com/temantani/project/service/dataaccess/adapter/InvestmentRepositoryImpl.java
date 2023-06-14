@@ -1,9 +1,12 @@
 package com.temantani.project.service.dataaccess.adapter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.project.service.dataaccess.mapper.ProjectDataAccessMapper;
@@ -11,7 +14,7 @@ import com.temantani.project.service.dataaccess.repository.InvestmentJpaReposito
 import com.temantani.project.service.domain.entity.Investment;
 import com.temantani.project.service.domain.ports.output.repository.InvestmentRepository;
 
-@Repository
+@Component
 public class InvestmentRepositoryImpl implements InvestmentRepository {
 
   private final EntityManager manager;
@@ -34,6 +37,12 @@ public class InvestmentRepositoryImpl implements InvestmentRepository {
     } catch (EntityExistsException e) {
       throw new DataAlreadyExistsException("Investment already exists for: " + investment.getId().getValue(), e);
     }
+  }
+
+  @Override
+  public List<Investment> saveAll(List<Investment> investments) {
+    return repo.saveAll(investments.stream().map(mapper::investmentToInvestmentEntity).collect(Collectors.toList()))
+        .stream().map(mapper::investmentEntityToInvestment).collect(Collectors.toList());
   }
 
 }

@@ -13,7 +13,11 @@ public class Helper {
   }
 
   public static final Boolean validateNonEmpty(String... field) {
-    return List.of(field).stream().allMatch((s) -> s != null && s.isBlank() == false);
+    return List.of(field).stream().allMatch((s) -> {
+      Boolean b = s != null;
+      b = s.isBlank() == false;
+      return b;
+    });
   }
 
   public static final ZonedDateTime now() {

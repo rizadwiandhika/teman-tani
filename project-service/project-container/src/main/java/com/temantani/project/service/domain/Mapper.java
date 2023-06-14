@@ -2,14 +2,12 @@ package com.temantani.project.service.domain;
 
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-
 import com.temantani.project.service.domain.dto.InvestmentObject;
 import com.temantani.project.service.domain.dto.ProjectObject;
 import com.temantani.project.service.domain.jpa.InvestmentEntity;
 import com.temantani.project.service.domain.jpa.ProjectEntity;
 
-@Component
+// @Component
 public class Mapper {
 
   public ProjectObject projectEntityToProjectObject(ProjectEntity entity) {

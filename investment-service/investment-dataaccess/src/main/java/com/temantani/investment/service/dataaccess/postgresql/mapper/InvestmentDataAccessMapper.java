@@ -14,17 +14,17 @@ import com.temantani.domain.valueobject.UserId;
 import com.temantani.investment.service.dataaccess.postgresql.entity.FundraisingClosureOutboxEntity;
 import com.temantani.investment.service.dataaccess.postgresql.entity.InvestmentEntity;
 import com.temantani.investment.service.dataaccess.postgresql.entity.InvestorEntity;
-import com.temantani.investment.service.dataaccess.postgresql.entity.ProjectEntity;
+import com.temantani.investment.service.dataaccess.postgresql.entity.FundraisingEntity;
 import com.temantani.investment.service.domain.entity.Investment;
 import com.temantani.investment.service.domain.entity.Investor;
-import com.temantani.investment.service.domain.entity.Project;
+import com.temantani.investment.service.domain.entity.Fundraising;
 import com.temantani.investment.service.domain.outbox.model.fundraisingclosure.FundraisingClosureOutboxMessage;
 
 @Component
 public class InvestmentDataAccessMapper {
 
-  public ProjectEntity projectToProjectEntity(Project project) {
-    ProjectEntity projectEntity = ProjectEntity.builder()
+  public FundraisingEntity projectToProjectEntity(Fundraising project) {
+    FundraisingEntity projectEntity = FundraisingEntity.builder()
         .id(project.getId().getValue())
         .version(project.getVersion())
         .status(project.getStatus())
@@ -38,12 +38,12 @@ public class InvestmentDataAccessMapper {
             : project.getInvestments().stream().map(this::investmentToInvestmentEntity).collect(Collectors.toList()))
         .build();
 
-    projectEntity.getInvestments().forEach(i -> i.setProject(projectEntity));
+    projectEntity.getInvestments().forEach(i -> i.setFundraising(projectEntity));
     return projectEntity;
   }
 
-  public Project projectEntityToProject(ProjectEntity entity) {
-    return Project.builder()
+  public Fundraising projectEntityToProject(FundraisingEntity entity) {
+    return Fundraising.builder()
         .id(new ProjectId(entity.getId()))
         .version(entity.getVersion())
         .status(entity.getStatus())

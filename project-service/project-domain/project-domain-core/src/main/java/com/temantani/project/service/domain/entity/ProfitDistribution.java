@@ -29,10 +29,15 @@ public class ProfitDistribution extends AggregateRoot<ProfitDistributionId> {
       throw new ProjectDomainException("Only manager: " + this.managerId.getValue() + " can transfer the profit");
     }
 
+    if (status != DistributionStatus.WAITING) {
+      throw new ProjectDomainException(
+          "Transfer cannot be done since this profit distribution is not waiting for transfer");
+    }
+
     for (ProfitDistributionDetail detail : details) {
       String proof = transfersProofs.get(detail.getId());
       if (proof == null || proof.isEmpty()) {
-        throw new ProjectDomainException("Transfer proof for detail: " + detail.getId() + " is empty");
+        throw new ProjectDomainException("Transfer proof for detail: " + detail.getId().getValue() + " is empty");
       }
       detail.completeTransferProof(proof);
     }

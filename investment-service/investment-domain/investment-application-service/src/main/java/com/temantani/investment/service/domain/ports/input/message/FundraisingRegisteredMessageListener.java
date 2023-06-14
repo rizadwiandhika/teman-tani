@@ -6,5 +6,6 @@ import java.util.UUID;
 import com.temantani.domain.valueobject.Money;
 
 public interface FundraisingRegisteredMessageListener {
-  void registerFundraisingProject(UUID projectId, Money fundraisingTarget, ZonedDateTime fundraisingDeadline);
+  void registerFundraisingProject(UUID projectId, String description, Money fundraisingTarget,
+      ZonedDateTime fundraisingDeadline);
 }

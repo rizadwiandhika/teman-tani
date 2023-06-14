@@ -6,7 +6,7 @@ import com.temantani.domain.exception.DomainException;
 
 public class BankAccount {
 
-  private static final List<String> supportedBanks = List.of("BCA", "BNI", "BRI", "Mandiri");
+  private static final List<String> supportedBanks = List.of("BCA", "BNI", "BRI", "MANDIRI");
   public static final BankAccount EMPTY = new BankAccount();
 
   private final String bank;
@@ -20,6 +20,7 @@ public class BankAccount {
   }
 
   public BankAccount(String bank, String accountNumber, String accountHolderName) {
+    bank = bank.trim().toUpperCase();
     if (!supportedBanks.contains(bank)) {
       throw new DomainException("Bank is not supported");
     }

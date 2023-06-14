@@ -2,11 +2,9 @@ package com.temantani.project.service.domain.jpa;
 
 import java.util.UUID;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +17,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "investments")
+// @Entity
+// @Table(name = "investments")
 public class InvestmentEntity {
   @Id
   private UUID id;

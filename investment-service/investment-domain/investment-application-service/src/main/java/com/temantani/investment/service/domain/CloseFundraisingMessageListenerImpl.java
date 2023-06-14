@@ -4,22 +4,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.temantani.domain.valueobject.ProjectId;
-import com.temantani.investment.service.domain.entity.Project;
+import com.temantani.investment.service.domain.entity.Fundraising;
 import com.temantani.investment.service.domain.event.ProjectClosureEvent;
 import com.temantani.investment.service.domain.exception.InvestmentDomainException;
 import com.temantani.investment.service.domain.mapper.InvestmentDataMapper;
 import com.temantani.investment.service.domain.outbox.scheduler.fundraisingclosure.FundraisingOutboxHelper;
 import com.temantani.investment.service.domain.ports.input.message.CloseFundraisingMessageListener;
-import com.temantani.investment.service.domain.ports.output.repository.ProjectRepository;
+import com.temantani.investment.service.domain.ports.output.repository.FundraisingRepository;
 
 @Component
 public class CloseFundraisingMessageListenerImpl implements CloseFundraisingMessageListener {
 
-  private final ProjectRepository projectRepository;
+  private final FundraisingRepository projectRepository;
   private final InvestmentDataMapper mapper;
   private final FundraisingOutboxHelper fundraisingOutboxHelper;
 
-  public CloseFundraisingMessageListenerImpl(ProjectRepository projectRepository, InvestmentDataMapper mapper,
+  public CloseFundraisingMessageListenerImpl(FundraisingRepository projectRepository, InvestmentDataMapper mapper,
       FundraisingOutboxHelper fundraisingOutboxHelper) {
     this.projectRepository = projectRepository;
     this.mapper = mapper;
@@ -29,7 +29,7 @@ public class CloseFundraisingMessageListenerImpl implements CloseFundraisingMess
   @Override
   @Transactional
   public void closeFundraising(ProjectId projectId) {
-    Project project = projectRepository.findById(projectId)
+    Fundraising project = projectRepository.findById(projectId)
         .orElseThrow(() -> new InvestmentDomainException("Project: " + projectId.getValue() + " not found"));
 
     ProjectClosureEvent event = project.close();

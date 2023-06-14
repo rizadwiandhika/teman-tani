@@ -41,6 +41,7 @@ public class KafkaLandRegisteredListener implements KafkaConsumer<LandRegistered
   private void handle(LandRegisteredAvroModel message) {
     try {
       listener.createLand(mapper.LandRegisteredAvroModelToLandRegisteredMessage(message));
+      log.info("Land was created: {}", message.toString());
     } catch (DataAlreadyExistsException e) {
       log.warn("Ignoring land message since land: {} is already exists.", message.getLandId());
     }

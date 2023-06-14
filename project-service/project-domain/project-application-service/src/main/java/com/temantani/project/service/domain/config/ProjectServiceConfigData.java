@@ -9,5 +9,6 @@ import lombok.Data;
 @Component
 @ConfigurationProperties(prefix = "project-service")
 public class ProjectServiceConfigData {
-
+  private String fundraisingRegisteredTopicName;
+  private String closeFundraisingRequestTopicName;
 }

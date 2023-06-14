@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-
 import org.springframework.stereotype.Component;
 
 import com.temantani.domain.exception.DataAlreadyExistsException;
@@ -14,12 +13,12 @@ import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.investment.service.dataaccess.postgresql.mapper.InvestmentDataAccessMapper;
 import com.temantani.investment.service.dataaccess.postgresql.repository.ProjectJpaRepository;
-import com.temantani.investment.service.domain.entity.Project;
-import com.temantani.investment.service.domain.ports.output.repository.ProjectRepository;
-import com.temantani.investment.service.domain.valueobject.ProjectStatus;
+import com.temantani.investment.service.domain.entity.Fundraising;
+import com.temantani.investment.service.domain.ports.output.repository.FundraisingRepository;
+import com.temantani.investment.service.domain.valueobject.FundraisingStatus;
 
 @Component
-public class ProjectRepositoryImpl implements ProjectRepository {
+public class ProjectRepositoryImpl implements FundraisingRepository {
 
   private final ProjectJpaRepository repo;
   private final InvestmentDataAccessMapper mapper;
@@ -32,28 +31,28 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   }
 
   @Override
-  public Optional<Project> findById(ProjectId projectId) {
+  public Optional<Fundraising> findById(ProjectId projectId) {
     return repo.findById(projectId.getValue()).map(mapper::projectEntityToProject);
   }
 
   @Override
-  public Project save(Project project) {
+  public Fundraising save(Fundraising project) {
     return mapper.projectEntityToProject(repo.save(mapper.projectToProjectEntity(project)));
   }
 
   @Override
-  public Optional<Project> findByInvestmentId(InvestmentId investmentId) {
+  public Optional<Fundraising> findByInvestmentId(InvestmentId investmentId) {
     return repo.findByInvestmentId(investmentId.getValue()).map(mapper::projectEntityToProject);
   }
 
   @Override
-  public Optional<List<Project>> findByStatus(ProjectStatus status) {
+  public Optional<List<Fundraising>> findByStatus(FundraisingStatus status) {
     return repo.findByStatus(status).map(l -> l.stream()
         .map(mapper::projectEntityToProject).collect(Collectors.toList()));
   }
 
   @Override
-  public Project create(Project project) {
+  public Fundraising create(Fundraising project) {
     try {
       manager.persist(mapper.projectToProjectEntity(project));
       manager.flush();
@@ -61,7 +60,11 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     } catch (EntityExistsException e) {
       throw new DataAlreadyExistsException(
           "Project: " + project.getId().getValue() + " is already exists for fundraising", e);
-    }
+    } /*
+       * catch (PersistenceException e) {
+       * 
+       * }
+       */
   }
 
 }

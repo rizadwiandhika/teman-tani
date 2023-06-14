@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,10 +38,10 @@ public class ProjectEntity {
   @Version
   private Integer version;
 
-  @OneToMany(mappedBy = "project")
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private List<ProfitReceiverEntity> profitReceivers;
 
-  @OneToMany(mappedBy = "project")
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private List<ExpenseEntity> expenses;
 
   private UUID landId;
@@ -59,5 +60,4 @@ public class ProjectEntity {
   private ZonedDateTime executedAt;
   private ZonedDateTime finishedAt;
   private String failureMessages;
-
 }

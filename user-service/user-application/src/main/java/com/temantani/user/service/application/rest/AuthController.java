@@ -1,8 +1,5 @@
 package com.temantani.user.service.application.rest;
 
-import java.util.Map;
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -17,15 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.temantani.security.service.JwtService;
 import com.temantani.user.service.domain.dto.login.UserLoginRequest;
 import com.temantani.user.service.domain.dto.login.UserLoginResponse;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationRequest;
 import com.temantani.user.service.domain.dto.registration.UserRegistrationResponse;
 import com.temantani.user.service.domain.ports.input.service.UserApplicationService;
-import com.temantani.user.service.domain.ports.output.repository.message.JsonMessagePublisher;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,10 +31,6 @@ public class AuthController {
   private final UserApplicationService userApplicationService;
   private final AuthenticationManager authManager;
   private final JwtService jwtService;
-  /*
-   * private final JsonMessagePublisher jsonMessagePublisher;
-   * private final ObjectMapper mapper;
-   */
 
   public AuthController(UserApplicationService userApplicationService, AuthenticationManager authManager,
       JwtService jwtService) {
@@ -75,13 +65,5 @@ public class AuthController {
 
     return ResponseEntity.ok(response);
   }
-
-  // @PostMapping("/publish")
-  // public ResponseEntity<String> publish(@RequestBody Map<String, Object> req)
-  // throws JsonProcessingException {
-  // String data = mapper.writeValueAsString(req);
-  // jsonMessagePublisher.send(UUID.randomUUID().toString(), data);
-  // return ResponseEntity.ok(data);
-  // }
 
 }

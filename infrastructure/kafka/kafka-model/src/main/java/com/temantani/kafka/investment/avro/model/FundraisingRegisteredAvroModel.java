@@ -14,10 +14,10 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 1218094168379176380L;
+  private static final long serialVersionUID = -6473251766513141279L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FundraisingRegisteredAvroModel\",\"namespace\":\"com.temantani.kafka.investment.avro.model\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"fundraisingTarget\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":10,\"scale\":2}},{\"name\":\"fundraisingDeadline\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FundraisingRegisteredAvroModel\",\"namespace\":\"com.temantani.kafka.investment.avro.model\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"landId\",\"type\":{\"type\":\"string\",\"logicalType\":\"uuid\"}},{\"name\":\"description\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"harvest\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"fundraisingTarget\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":10,\"scale\":2}},{\"name\":\"fundraisingDeadline\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}},{\"name\":\"estimatedFinished\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}},{\"name\":\"createdAt\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -78,8 +78,13 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
   }
 
   private java.lang.String id;
+  private java.lang.String landId;
+  private java.lang.String description;
+  private java.lang.String harvest;
   private java.math.BigDecimal fundraisingTarget;
   private java.time.Instant fundraisingDeadline;
+  private java.time.Instant estimatedFinished;
+  private java.time.Instant createdAt;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -91,13 +96,23 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
   /**
    * All-args constructor.
    * @param id The new value for id
+   * @param landId The new value for landId
+   * @param description The new value for description
+   * @param harvest The new value for harvest
    * @param fundraisingTarget The new value for fundraisingTarget
    * @param fundraisingDeadline The new value for fundraisingDeadline
+   * @param estimatedFinished The new value for estimatedFinished
+   * @param createdAt The new value for createdAt
    */
-  public FundraisingRegisteredAvroModel(java.lang.String id, java.math.BigDecimal fundraisingTarget, java.time.Instant fundraisingDeadline) {
+  public FundraisingRegisteredAvroModel(java.lang.String id, java.lang.String landId, java.lang.String description, java.lang.String harvest, java.math.BigDecimal fundraisingTarget, java.time.Instant fundraisingDeadline, java.time.Instant estimatedFinished, java.time.Instant createdAt) {
     this.id = id;
+    this.landId = landId;
+    this.description = description;
+    this.harvest = harvest;
     this.fundraisingTarget = fundraisingTarget;
     this.fundraisingDeadline = fundraisingDeadline.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+    this.estimatedFinished = estimatedFinished.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+    this.createdAt = createdAt.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
   }
 
   public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
@@ -106,8 +121,13 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return id;
-    case 1: return fundraisingTarget;
-    case 2: return fundraisingDeadline;
+    case 1: return landId;
+    case 2: return description;
+    case 3: return harvest;
+    case 4: return fundraisingTarget;
+    case 5: return fundraisingDeadline;
+    case 6: return estimatedFinished;
+    case 7: return createdAt;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -115,7 +135,12 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
   private static final org.apache.avro.Conversion<?>[] conversions =
       new org.apache.avro.Conversion<?>[] {
       null,
+      null,
+      null,
+      null,
       new org.apache.avro.Conversions.DecimalConversion(),
+      new org.apache.avro.data.TimeConversions.TimestampMillisConversion(),
+      new org.apache.avro.data.TimeConversions.TimestampMillisConversion(),
       new org.apache.avro.data.TimeConversions.TimestampMillisConversion(),
       null
   };
@@ -130,8 +155,13 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: id = value$ != null ? value$.toString() : null; break;
-    case 1: fundraisingTarget = (java.math.BigDecimal)value$; break;
-    case 2: fundraisingDeadline = (java.time.Instant)value$; break;
+    case 1: landId = value$ != null ? value$.toString() : null; break;
+    case 2: description = value$ != null ? value$.toString() : null; break;
+    case 3: harvest = value$ != null ? value$.toString() : null; break;
+    case 4: fundraisingTarget = (java.math.BigDecimal)value$; break;
+    case 5: fundraisingDeadline = (java.time.Instant)value$; break;
+    case 6: estimatedFinished = (java.time.Instant)value$; break;
+    case 7: createdAt = (java.time.Instant)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -151,6 +181,57 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
    */
   public void setId(java.lang.String value) {
     this.id = value;
+  }
+
+  /**
+   * Gets the value of the 'landId' field.
+   * @return The value of the 'landId' field.
+   */
+  public java.lang.String getLandId() {
+    return landId;
+  }
+
+
+  /**
+   * Sets the value of the 'landId' field.
+   * @param value the value to set.
+   */
+  public void setLandId(java.lang.String value) {
+    this.landId = value;
+  }
+
+  /**
+   * Gets the value of the 'description' field.
+   * @return The value of the 'description' field.
+   */
+  public java.lang.String getDescription() {
+    return description;
+  }
+
+
+  /**
+   * Sets the value of the 'description' field.
+   * @param value the value to set.
+   */
+  public void setDescription(java.lang.String value) {
+    this.description = value;
+  }
+
+  /**
+   * Gets the value of the 'harvest' field.
+   * @return The value of the 'harvest' field.
+   */
+  public java.lang.String getHarvest() {
+    return harvest;
+  }
+
+
+  /**
+   * Sets the value of the 'harvest' field.
+   * @param value the value to set.
+   */
+  public void setHarvest(java.lang.String value) {
+    this.harvest = value;
   }
 
   /**
@@ -185,6 +266,40 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
    */
   public void setFundraisingDeadline(java.time.Instant value) {
     this.fundraisingDeadline = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+  }
+
+  /**
+   * Gets the value of the 'estimatedFinished' field.
+   * @return The value of the 'estimatedFinished' field.
+   */
+  public java.time.Instant getEstimatedFinished() {
+    return estimatedFinished;
+  }
+
+
+  /**
+   * Sets the value of the 'estimatedFinished' field.
+   * @param value the value to set.
+   */
+  public void setEstimatedFinished(java.time.Instant value) {
+    this.estimatedFinished = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+  }
+
+  /**
+   * Gets the value of the 'createdAt' field.
+   * @return The value of the 'createdAt' field.
+   */
+  public java.time.Instant getCreatedAt() {
+    return createdAt;
+  }
+
+
+  /**
+   * Sets the value of the 'createdAt' field.
+   * @param value the value to set.
+   */
+  public void setCreatedAt(java.time.Instant value) {
+    this.createdAt = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
   }
 
   /**
@@ -229,8 +344,13 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
     implements org.apache.avro.data.RecordBuilder<FundraisingRegisteredAvroModel> {
 
     private java.lang.String id;
+    private java.lang.String landId;
+    private java.lang.String description;
+    private java.lang.String harvest;
     private java.math.BigDecimal fundraisingTarget;
     private java.time.Instant fundraisingDeadline;
+    private java.time.Instant estimatedFinished;
+    private java.time.Instant createdAt;
 
     /** Creates a new Builder */
     private Builder() {
@@ -247,13 +367,33 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
         this.id = data().deepCopy(fields()[0].schema(), other.id);
         fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
-      if (isValidValue(fields()[1], other.fundraisingTarget)) {
-        this.fundraisingTarget = data().deepCopy(fields()[1].schema(), other.fundraisingTarget);
+      if (isValidValue(fields()[1], other.landId)) {
+        this.landId = data().deepCopy(fields()[1].schema(), other.landId);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.fundraisingDeadline)) {
-        this.fundraisingDeadline = data().deepCopy(fields()[2].schema(), other.fundraisingDeadline);
+      if (isValidValue(fields()[2], other.description)) {
+        this.description = data().deepCopy(fields()[2].schema(), other.description);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
+      }
+      if (isValidValue(fields()[3], other.harvest)) {
+        this.harvest = data().deepCopy(fields()[3].schema(), other.harvest);
+        fieldSetFlags()[3] = other.fieldSetFlags()[3];
+      }
+      if (isValidValue(fields()[4], other.fundraisingTarget)) {
+        this.fundraisingTarget = data().deepCopy(fields()[4].schema(), other.fundraisingTarget);
+        fieldSetFlags()[4] = other.fieldSetFlags()[4];
+      }
+      if (isValidValue(fields()[5], other.fundraisingDeadline)) {
+        this.fundraisingDeadline = data().deepCopy(fields()[5].schema(), other.fundraisingDeadline);
+        fieldSetFlags()[5] = other.fieldSetFlags()[5];
+      }
+      if (isValidValue(fields()[6], other.estimatedFinished)) {
+        this.estimatedFinished = data().deepCopy(fields()[6].schema(), other.estimatedFinished);
+        fieldSetFlags()[6] = other.fieldSetFlags()[6];
+      }
+      if (isValidValue(fields()[7], other.createdAt)) {
+        this.createdAt = data().deepCopy(fields()[7].schema(), other.createdAt);
+        fieldSetFlags()[7] = other.fieldSetFlags()[7];
       }
     }
 
@@ -267,13 +407,33 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
         this.id = data().deepCopy(fields()[0].schema(), other.id);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.fundraisingTarget)) {
-        this.fundraisingTarget = data().deepCopy(fields()[1].schema(), other.fundraisingTarget);
+      if (isValidValue(fields()[1], other.landId)) {
+        this.landId = data().deepCopy(fields()[1].schema(), other.landId);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.fundraisingDeadline)) {
-        this.fundraisingDeadline = data().deepCopy(fields()[2].schema(), other.fundraisingDeadline);
+      if (isValidValue(fields()[2], other.description)) {
+        this.description = data().deepCopy(fields()[2].schema(), other.description);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.harvest)) {
+        this.harvest = data().deepCopy(fields()[3].schema(), other.harvest);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.fundraisingTarget)) {
+        this.fundraisingTarget = data().deepCopy(fields()[4].schema(), other.fundraisingTarget);
+        fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.fundraisingDeadline)) {
+        this.fundraisingDeadline = data().deepCopy(fields()[5].schema(), other.fundraisingDeadline);
+        fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.estimatedFinished)) {
+        this.estimatedFinished = data().deepCopy(fields()[6].schema(), other.estimatedFinished);
+        fieldSetFlags()[6] = true;
+      }
+      if (isValidValue(fields()[7], other.createdAt)) {
+        this.createdAt = data().deepCopy(fields()[7].schema(), other.createdAt);
+        fieldSetFlags()[7] = true;
       }
     }
 
@@ -318,6 +478,126 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
     }
 
     /**
+      * Gets the value of the 'landId' field.
+      * @return The value.
+      */
+    public java.lang.String getLandId() {
+      return landId;
+    }
+
+
+    /**
+      * Sets the value of the 'landId' field.
+      * @param value The value of 'landId'.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setLandId(java.lang.String value) {
+      validate(fields()[1], value);
+      this.landId = value;
+      fieldSetFlags()[1] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'landId' field has been set.
+      * @return True if the 'landId' field has been set, false otherwise.
+      */
+    public boolean hasLandId() {
+      return fieldSetFlags()[1];
+    }
+
+
+    /**
+      * Clears the value of the 'landId' field.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearLandId() {
+      landId = null;
+      fieldSetFlags()[1] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'description' field.
+      * @return The value.
+      */
+    public java.lang.String getDescription() {
+      return description;
+    }
+
+
+    /**
+      * Sets the value of the 'description' field.
+      * @param value The value of 'description'.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setDescription(java.lang.String value) {
+      validate(fields()[2], value);
+      this.description = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'description' field has been set.
+      * @return True if the 'description' field has been set, false otherwise.
+      */
+    public boolean hasDescription() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'description' field.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearDescription() {
+      description = null;
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'harvest' field.
+      * @return The value.
+      */
+    public java.lang.String getHarvest() {
+      return harvest;
+    }
+
+
+    /**
+      * Sets the value of the 'harvest' field.
+      * @param value The value of 'harvest'.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setHarvest(java.lang.String value) {
+      validate(fields()[3], value);
+      this.harvest = value;
+      fieldSetFlags()[3] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'harvest' field has been set.
+      * @return True if the 'harvest' field has been set, false otherwise.
+      */
+    public boolean hasHarvest() {
+      return fieldSetFlags()[3];
+    }
+
+
+    /**
+      * Clears the value of the 'harvest' field.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearHarvest() {
+      harvest = null;
+      fieldSetFlags()[3] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'fundraisingTarget' field.
       * @return The value.
       */
@@ -332,9 +612,9 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       * @return This builder.
       */
     public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setFundraisingTarget(java.math.BigDecimal value) {
-      validate(fields()[1], value);
+      validate(fields()[4], value);
       this.fundraisingTarget = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -343,7 +623,7 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       * @return True if the 'fundraisingTarget' field has been set, false otherwise.
       */
     public boolean hasFundraisingTarget() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[4];
     }
 
 
@@ -353,7 +633,7 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       */
     public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearFundraisingTarget() {
       fundraisingTarget = null;
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -372,9 +652,9 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       * @return This builder.
       */
     public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setFundraisingDeadline(java.time.Instant value) {
-      validate(fields()[2], value);
+      validate(fields()[5], value);
       this.fundraisingDeadline = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -383,7 +663,7 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       * @return True if the 'fundraisingDeadline' field has been set, false otherwise.
       */
     public boolean hasFundraisingDeadline() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[5];
     }
 
 
@@ -392,7 +672,85 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       * @return This builder.
       */
     public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearFundraisingDeadline() {
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[5] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'estimatedFinished' field.
+      * @return The value.
+      */
+    public java.time.Instant getEstimatedFinished() {
+      return estimatedFinished;
+    }
+
+
+    /**
+      * Sets the value of the 'estimatedFinished' field.
+      * @param value The value of 'estimatedFinished'.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setEstimatedFinished(java.time.Instant value) {
+      validate(fields()[6], value);
+      this.estimatedFinished = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+      fieldSetFlags()[6] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'estimatedFinished' field has been set.
+      * @return True if the 'estimatedFinished' field has been set, false otherwise.
+      */
+    public boolean hasEstimatedFinished() {
+      return fieldSetFlags()[6];
+    }
+
+
+    /**
+      * Clears the value of the 'estimatedFinished' field.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearEstimatedFinished() {
+      fieldSetFlags()[6] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'createdAt' field.
+      * @return The value.
+      */
+    public java.time.Instant getCreatedAt() {
+      return createdAt;
+    }
+
+
+    /**
+      * Sets the value of the 'createdAt' field.
+      * @param value The value of 'createdAt'.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder setCreatedAt(java.time.Instant value) {
+      validate(fields()[7], value);
+      this.createdAt = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+      fieldSetFlags()[7] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'createdAt' field has been set.
+      * @return True if the 'createdAt' field has been set, false otherwise.
+      */
+    public boolean hasCreatedAt() {
+      return fieldSetFlags()[7];
+    }
+
+
+    /**
+      * Clears the value of the 'createdAt' field.
+      * @return This builder.
+      */
+    public com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel.Builder clearCreatedAt() {
+      fieldSetFlags()[7] = false;
       return this;
     }
 
@@ -402,8 +760,13 @@ public class FundraisingRegisteredAvroModel extends org.apache.avro.specific.Spe
       try {
         FundraisingRegisteredAvroModel record = new FundraisingRegisteredAvroModel();
         record.id = fieldSetFlags()[0] ? this.id : (java.lang.String) defaultValue(fields()[0]);
-        record.fundraisingTarget = fieldSetFlags()[1] ? this.fundraisingTarget : (java.math.BigDecimal) defaultValue(fields()[1]);
-        record.fundraisingDeadline = fieldSetFlags()[2] ? this.fundraisingDeadline : (java.time.Instant) defaultValue(fields()[2]);
+        record.landId = fieldSetFlags()[1] ? this.landId : (java.lang.String) defaultValue(fields()[1]);
+        record.description = fieldSetFlags()[2] ? this.description : (java.lang.String) defaultValue(fields()[2]);
+        record.harvest = fieldSetFlags()[3] ? this.harvest : (java.lang.String) defaultValue(fields()[3]);
+        record.fundraisingTarget = fieldSetFlags()[4] ? this.fundraisingTarget : (java.math.BigDecimal) defaultValue(fields()[4]);
+        record.fundraisingDeadline = fieldSetFlags()[5] ? this.fundraisingDeadline : (java.time.Instant) defaultValue(fields()[5]);
+        record.estimatedFinished = fieldSetFlags()[6] ? this.estimatedFinished : (java.time.Instant) defaultValue(fields()[6]);
+        record.createdAt = fieldSetFlags()[7] ? this.createdAt : (java.time.Instant) defaultValue(fields()[7]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;

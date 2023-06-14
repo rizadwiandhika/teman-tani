@@ -11,6 +11,21 @@
       }
     },
     {
+      "name": "landId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "harvest",
+      "type": "string"
+    },
+    {
       "name": "fundraisingTarget",
       "type": {
         "type": "bytes",
@@ -21,6 +36,20 @@
     },
     {
       "name": "fundraisingDeadline",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "estimatedFinished",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "createdAt",
       "type": {
         "type": "long",
         "logicalType": "timestamp-millis"

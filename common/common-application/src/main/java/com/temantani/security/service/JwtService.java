@@ -1,5 +1,6 @@
 package com.temantani.security.service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,13 +18,14 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
 
-  private static final String SECRET_KEY = "404D635166546A576E5A7234753778217A25432A462D4A614E645267556B5870";
+  // private static final String SECRET_KEY =
+  // "404D635166546A576E5A7234753778217A25432A462D4A614E645267556B5870";
+  private static final String SECRET_KEY = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   public String extractSubject(String token) {
     return extractClaim(token, Claims::getSubject);
@@ -92,7 +94,8 @@ public class JwtService {
   private Key getSignKey() {
     // The secret key must be minimum 256 bits length as required from
     // Keys.hmacShaKeyFor
-    byte[] decoded = Decoders.BASE64.decode(SECRET_KEY);
+    // byte[] decoded = Decoders.BASE64.decode(SECRET_KEY);
+    byte[] decoded = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
     return Keys.hmacShaKeyFor(decoded);
   }
 

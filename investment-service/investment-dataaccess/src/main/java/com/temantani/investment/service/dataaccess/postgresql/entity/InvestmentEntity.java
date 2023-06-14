@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,9 +34,9 @@ public class InvestmentEntity {
   @Id
   private UUID id;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.DETACH)
   @JoinColumn(name = "PROJECT_ID")
-  private ProjectEntity project;
+  private FundraisingEntity fundraising;
 
   @Enumerated(EnumType.STRING)
   private InvestmentStatus status;

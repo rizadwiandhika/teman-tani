@@ -25,20 +25,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+// @IdClass(ProfitReceiverEntityId.class)
 @Table(name = "profit_receivers")
 public class ProfitReceiverEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  // @Id
   @Enumerated(EnumType.STRING)
   private DistributionType type;
 
+  // @Id
   @ManyToOne
   @JoinColumn(name = "PROJECT_ID")
   private ProjectEntity project;
 
+  // @Id
   private UUID receiverId;
   private BigDecimal devidend;
 

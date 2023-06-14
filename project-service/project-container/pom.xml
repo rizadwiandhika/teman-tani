@@ -13,6 +13,34 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>project-domain-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>project-application-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>project-application</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>project-dataaccess</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>project-messaging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.temantani</groupId>
+      <artifactId>storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <!-- <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
@@ -27,7 +55,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-    </dependency>
+    </dependency> -->
   </dependencies>
   <build>
     <plugins>

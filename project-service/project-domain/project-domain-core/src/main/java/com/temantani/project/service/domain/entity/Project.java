@@ -10,6 +10,7 @@ import static com.temantani.domain.valueobject.ProjectStatus.HIRING;
 import static com.temantani.domain.valueobject.ProjectStatus.ONGOING;
 import static com.temantani.project.service.domain.valueobject.DistributionStatus.WAITING;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,18 +18,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.temantani.domain.entity.AggregateRoot;
+import com.temantani.domain.helper.Helper;
 import com.temantani.domain.valueobject.BankAccount;
-import com.temantani.domain.valueobject.InvestmentId;
 import com.temantani.domain.valueobject.LandId;
 import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.ProjectStatus;
 import com.temantani.domain.valueobject.UserId;
+import com.temantani.project.service.domain.exception.ProceededHiringException;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
 import com.temantani.project.service.domain.valueobject.ExpenseId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
-import com.temantani.project.service.domain.valueobject.ProfitReceiver;
 
 public class Project extends AggregateRoot<ProjectId> {
 
@@ -45,7 +46,7 @@ public class Project extends AggregateRoot<ProjectId> {
   private Money collectedFunds;
   private Money income;
   private Money distributedIncome;
-  private List<ProfitReceiver> profitReceivers;
+  private List<ShareHolder> shareHolders;
   private List<Expense> expenses;
   private ZonedDateTime createdAt;
   private ZonedDateTime executedAt;
@@ -68,7 +69,7 @@ public class Project extends AggregateRoot<ProjectId> {
       throw new ProjectDomainException("Invalid required project plan information for initialization");
     }
 
-    if (validateNonEmpty(description, harvest)) {
+    if (validateNonEmpty(description, harvest) == false) {
       throw new ProjectDomainException("Description and harvest information should not be empty");
     }
 
@@ -83,6 +84,10 @@ public class Project extends AggregateRoot<ProjectId> {
     if (fundraisingDeadline.isAfter(estimatedFinished)) {
       throw new ProjectDomainException("Fundraising deadline cannot be behind the estimated project finish date");
     }
+
+    if (fundraisingDeadline.isBefore(Helper.now())) {
+      throw new ProjectDomainException("Fundraising deadline cannot be behind current date");
+    }
   }
 
   public void createProject(LandId landId, UserId managerId, UserId landOwnerId) {
@@ -92,30 +97,60 @@ public class Project extends AggregateRoot<ProjectId> {
 
     status = FUNDRAISING;
     createdAt = now();
+    collectedFunds = Money.ZERO;
+    income = Money.ZERO;
+    distributedIncome = Money.ZERO;
+    failureMessages = new ArrayList<>();
+    shareHolders = new ArrayList<>();
+    expenses = new ArrayList<>();
 
-    profitReceivers = new ArrayList<>();
+    shareHolders = new ArrayList<>();
     // TODO: how much should a land owner takes devidend?
-    profitReceivers.add(ProfitReceiver.makeLandowner(landOwnerId));
+    shareHolders.add(ShareHolder.makeLandowner(landOwnerId));
 
     if (details == null) {
       details = new HashMap<>();
     }
   }
 
-  public void continueToHiring(UserId managerId) {
+  public void initiateToHiring(UserId managerId) {
     validateManager(managerId);
 
     if (status != FUNDRAISING) {
       throw new ProjectDomainException("Cannot start hiring since the project is not in FUNDRAISING status");
     }
 
+    status = ProjectStatus.WAITING_FOR_FUNDS;
+  }
+
+  public void proceededToHiring(List<Investment> investments) {
+    if (status != ProjectStatus.WAITING_FOR_FUNDS) {
+      throw new ProceededHiringException("Cannot proceeded to hiring since the project status is: " + status.name());
+    }
+
+    if (investments == null || investments.isEmpty()) {
+      throw new ProjectDomainException("There is no investments for this project: " + getId().getValue());
+    }
+
+    shareHolders = new ArrayList<>();
+    collectedFunds = investments.stream().map(Investment::getAmount).reduce(Money.ZERO, Money::add);
     if (collectedFunds.isGreaterThanZero() == false) {
       throw new ProjectDomainException("Cannot start hiring since there is no collected funds");
     }
 
-    if (profitReceivers == null || profitReceivers.isEmpty()) {
-      throw new ProjectDomainException("Cannot start hiring since there is no profit receivers");
-    }
+    investments.forEach(i -> {
+      if (i.getProjectId().equals(getId()) == false) {
+        throw new ProjectDomainException(
+            "Investment: " + i.getId().getValue() + " does not belong to project: " + getId().getValue());
+      }
+
+      if (i.getAmount().isGreaterThanZero() == false) {
+        throw new ProjectDomainException("Investment cannot be zero or less");
+      }
+
+      BigDecimal deviden = i.getAmount().divide(collectedFunds);
+      shareHolders.add(ShareHolder.makeInvestor(i.getInvestorId(), deviden));
+    });
 
     status = HIRING;
   }
@@ -157,27 +192,6 @@ public class Project extends AggregateRoot<ProjectId> {
     failureMessages = new ArrayList<>(reasons);
   }
 
-  public Investment addInvestment(InvestmentId investmentId, UserId investorId, Money amount) {
-    if (status != FUNDRAISING) {
-      throw new ProjectDomainException("Cannot add investment since project is not in FUNDRAISING status");
-    }
-
-    if (amount.isGreaterThanZero() == false) {
-      throw new ProjectDomainException("Cannot add investment with amount is less than zero");
-    }
-
-    collectedFunds = collectedFunds.add(amount);
-    if (profitReceivers == null) {
-      profitReceivers = new ArrayList<>();
-    }
-
-    // TODO: reduce with land owner devidend
-    Money deviden = amount.divide(collectedFunds);
-    profitReceivers.add(ProfitReceiver.makeInvestor(investorId, deviden.getAmount()));
-
-    return Investment.builder().id(investmentId).projectId(getId()).investorId(investorId).amount(amount).build();
-  }
-
   public void addExpense(UserId managerId, Expense expense) {
     validateManager(managerId);
 
@@ -194,10 +208,6 @@ public class Project extends AggregateRoot<ProjectId> {
 
     if (totalExpense.isGreaterThan(collectedFunds)) {
       throw new ProjectDomainException("Cannot add expense since expense amount is greater than collected funds");
-    }
-
-    if (expenses == null) {
-      expenses = new ArrayList<>();
     }
 
     expense.initiate(getId(), ExpenseId.generate());
@@ -236,7 +246,7 @@ public class Project extends AggregateRoot<ProjectId> {
     ProfitDistributionId profitDistributionId = ProfitDistributionId.generate();
 
     List<ProfitDistributionDetail> distributionDetails = new ArrayList<>();
-    profitReceivers.forEach((r) -> {
+    shareHolders.forEach((r) -> {
       distributionDetails.add(ProfitDistributionDetail.builder()
           .id(ProfitDistributionDetailId.generate())
           .profitDistributionId(profitDistributionId)
@@ -318,8 +328,8 @@ public class Project extends AggregateRoot<ProjectId> {
     return distributedIncome;
   }
 
-  public List<ProfitReceiver> getProfitReceivers() {
-    return profitReceivers;
+  public List<ShareHolder> getShareHolders() {
+    return shareHolders;
   }
 
   public List<Expense> getExpenses() {
@@ -359,7 +369,7 @@ public class Project extends AggregateRoot<ProjectId> {
     this.collectedFunds = builder.collectedFunds;
     this.income = builder.income;
     this.distributedIncome = builder.distributedIncome;
-    this.profitReceivers = builder.profitReceivers;
+    this.shareHolders = builder.profitReceivers;
     this.expenses = builder.expenses;
     this.createdAt = builder.createdAt;
     this.executedAt = builder.executedAt;
@@ -388,7 +398,7 @@ public class Project extends AggregateRoot<ProjectId> {
     private Money collectedFunds;
     private Money income;
     private Money distributedIncome;
-    private List<ProfitReceiver> profitReceivers;
+    private List<ShareHolder> profitReceivers;
     private List<Expense> expenses;
     private ZonedDateTime createdAt;
     private ZonedDateTime executedAt;
@@ -471,7 +481,7 @@ public class Project extends AggregateRoot<ProjectId> {
       return this;
     }
 
-    public Builder profitReceivers(List<ProfitReceiver> profitReceivers) {
+    public Builder profitReceivers(List<ShareHolder> profitReceivers) {
       this.profitReceivers = profitReceivers;
       return this;
     }

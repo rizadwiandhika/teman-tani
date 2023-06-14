@@ -13,6 +13,14 @@ import com.temantani.land.service.domain.dto.message.CreateApproverMessage;
 import com.temantani.land.service.domain.dto.message.CreateBorrowerMessage;
 // import com.temantani.land.service.domain.dto.common.Address;
 import com.temantani.land.service.domain.dto.proposal.ProposalRequest;
+import com.temantani.land.service.domain.dto.query.AddressData;
+import com.temantani.land.service.domain.dto.query.ApproverData;
+import com.temantani.land.service.domain.dto.query.AreaData;
+import com.temantani.land.service.domain.dto.query.AssesmentData;
+import com.temantani.land.service.domain.dto.query.HeightData;
+import com.temantani.land.service.domain.dto.query.LandData;
+import com.temantani.land.service.domain.dto.query.LandDetailsData;
+import com.temantani.land.service.domain.dto.query.ProposalData;
 import com.temantani.land.service.domain.entity.Approver;
 import com.temantani.land.service.domain.entity.Borrower;
 import com.temantani.land.service.domain.entity.Land;
@@ -113,6 +121,65 @@ public class LandDataMapper {
         .city(land.getAddress().getCity())
         .certificateUrl(land.getCertificateUrl())
         .photos(String.join(",", land.getPhotos()))
+        .build();
+  }
+
+  public LandData landToLandData(Land land) {
+    return LandData.builder()
+        .id(land.getId().getValue().toString())
+        .landStatus(land.getLandStatus())
+        .area(AreaData.builder()
+            .unit(land.getArea().getUnit().name())
+            .valueInHectare(land.getArea().getValueInHectare())
+            .build())
+        .address(AddressData.builder()
+            .street(land.getAddress().getStreet())
+            .city(land.getAddress().getCity())
+            .postalCode(land.getAddress().getPostalCode())
+            .build())
+        .photos(land.getPhotos())
+        .build();
+  }
+
+  public LandDetailsData landToLandDetailsData(Land land) {
+    return LandDetailsData.builder()
+        .id(land.getId().getValue().toString())
+        .proposal(land.getProposal() == null ? null
+            : ProposalData.builder()
+                .approvedAt(land.getProposal().getApprovedAt())
+                .proposedAt(land.getProposal().getProposedAt())
+                .reivisionMessages(land.getProposal().getRevisionMessages())
+                .failureMessages(land.getProposal().getFailureMessages())
+                .build())
+        .approver(land.getApprover() == null ? null
+            : ApproverData.builder()
+                .id(land.getApprover().getId().getValue().toString())
+                .email(land.getApprover().getEmail())
+                .name(land.getApprover().getName())
+                .build())
+        .assesment(land.getAssessment() == null ? null
+            : AssesmentData.builder()
+                .harvestSuitabilities(land.getAssessment().getHarvestSuitabilities())
+                .groundHeight(HeightData.builder().value(land.getAssessment().getGroundHeight().getValue())
+                    .unit(land.getAssessment().getGroundHeight().getUnit().name()).build())
+                .soilPh(land.getAssessment().getSoilPh())
+                .waterAvailabilityStatus(land.getAssessment().getWaterAvailabilityStatus().name())
+                .landUsageHistory(land.getAssessment().getLandUsageHistory())
+                .build())
+        .landStatus(land.getLandStatus())
+        .area(land.getArea() == null ? null
+            : AreaData.builder()
+                .unit(land.getArea().getUnit().name())
+                .valueInHectare(land.getArea().getValueInHectare())
+                .build())
+        .address(land.getAddress() == null ? null
+            : AddressData.builder()
+                .street(land.getAddress().getStreet())
+                .city(land.getAddress().getCity())
+                .postalCode(land.getAddress().getPostalCode())
+                .build())
+        .ceritifactionUrl(land.getCertificateUrl())
+        .photos(land.getPhotos())
         .build();
   }
 }

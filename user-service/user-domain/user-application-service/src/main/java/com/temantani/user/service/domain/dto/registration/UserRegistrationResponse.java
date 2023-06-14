@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserRegistrationResponse {
 
+  private final String userId;
   private final String email;
   private final String message;
 
