@@ -39,6 +39,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     data.put(
         "exception",
         exception.getMessage());
+    data.put(
+        "message",
+        exception.getMessage());
     data.put("from", "CustomAuthenticationEntryPoint");
 
     response.getOutputStream()

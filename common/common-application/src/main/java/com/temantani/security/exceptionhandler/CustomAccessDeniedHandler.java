@@ -37,6 +37,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		data.put(
 				"exception",
 				accessDeniedException.getMessage());
+		data.put(
+				"message",
+				accessDeniedException.getMessage());
 		data.put("from", "CustomAccessDeniedHandler");
 
 		response.getOutputStream()
