@@ -207,7 +207,9 @@ INSERT INTO "project".receivers VALUES
   ('10cdae59-99e5-475f-9810-6cf03dfb1501', 0, 'BCA', '123456789', 'Enzo'),
   ('10cdae59-99e5-475f-9810-6cf03dfb1502', 0, 'MANDIRI', '123456789', 'Hernowo');
 
-INSERT INTO "project".managers VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1510', 'manager@mail.com', 'Manager');
+INSERT INTO "project".managers VALUES 
+  ('10cdae59-99e5-475f-9810-6cf03dfb1510', 'manager@mail.com', 'Manager'),
+  ('9cc10842-a101-4976-9641-29cc9db071b1', 'superadmin@mail.com', 'Super Admin');
 
 INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1520','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street','City','11111');
 INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1521','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street 2','City 2','22222');
@@ -217,7 +219,7 @@ INSERT INTO "project".projects VALUES (
   'FINISHED',
   0,
   '10cdae59-99e5-475f-9810-6cf03dfb1520',
-  '10cdae59-99e5-475f-9810-6cf03dfb1510',
+  '9cc10842-a101-4976-9641-29cc9db071b1',
   'Description',
   '{}',
   'APPLE',
@@ -238,7 +240,7 @@ INSERT INTO "project".projects VALUES (
   'ONGOING',
   0,
   '10cdae59-99e5-475f-9810-6cf03dfb1520',
-  '10cdae59-99e5-475f-9810-6cf03dfb1510',
+  '9cc10842-a101-4976-9641-29cc9db071b1',
   'Description',
   '{}',
   'BANANA',
@@ -259,8 +261,8 @@ INSERT INTO "project".projects VALUES (
   'FUNDRAISING',
   0,
   '10cdae59-99e5-475f-9810-6cf03dfb1521',
-  '10cdae59-99e5-475f-9810-6cf03dfb1510',
-  'Description',
+  '9cc10842-a101-4976-9641-29cc9db071b1',
+  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, autem velit doloribus corporis facere maxime maiores sunt vitae deleniti impedit!',
   '{}',
   'RICE',
   50,
@@ -295,9 +297,9 @@ INSERT INTO "project".profit_receivers VALUES
 SELECT setval('profit_receivers_id_seq', 100);
 
 INSERT INTO "project".profit_distributions VALUES 
-  ('10cdae59-99e5-475f-9810-6cf03dfb1564', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1510', 20000000, '2024-08-10 00:00:00'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1565', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1510', 10000000, '2024-09-10 00:00:00'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1566', 'WAITING', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1510', 5000000, '2024-10-10 00:00:00');
+  ('10cdae59-99e5-475f-9810-6cf03dfb1564', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 20000000, '2024-08-10 00:00:00'),
+  ('10cdae59-99e5-475f-9810-6cf03dfb1565', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 10000000, '2024-09-10 00:00:00'),
+  ('10cdae59-99e5-475f-9810-6cf03dfb1566', 'WAITING', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 5000000, '2024-10-10 00:00:00');
 
 INSERT INTO "project".profit_distribution_details VALUES
   ('10cdae59-99e5-475f-9810-6cf03dfb1700', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 3000000, 'SOME_URL'),

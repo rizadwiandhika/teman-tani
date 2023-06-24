@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.temantani.project.service.domain.dto.query.TrackProfitDistributionRes
 import com.temantani.project.service.domain.ports.input.service.ProjectQueryService;
 
 @RestController
+@CrossOrigin
 @RequestMapping(produces = "application/json")
 public class ProjectController {
 

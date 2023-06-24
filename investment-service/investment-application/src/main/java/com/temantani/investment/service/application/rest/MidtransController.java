@@ -37,14 +37,12 @@ public class MidtransController {
   private final InvestmentApplicationService applicationService;
   private final PaymentService paymentService;
   private final ObjectMapper objectMapper;
-  private final String serverHost;
 
   public MidtransController(InvestmentApplicationService applicationService, PaymentService paymentService,
       ObjectMapper objectMapper, @Value("${server.port}") String serverPort) {
     this.applicationService = applicationService;
     this.paymentService = paymentService;
     this.objectMapper = objectMapper;
-    this.serverHost = "http://127.0.0.1:" + serverPort;
   }
 
   @PostMapping("/investments/{investment_id}/charge")
@@ -95,20 +93,26 @@ public class MidtransController {
   }
 
   @PostMapping(value = "/redirect/ui", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public RedirectView redirectUI(@RequestParam("response") String payload) throws IOException {
+  public RedirectView redirectUI(@RequestParam("response") String payload,
+      @RequestParam(value = "investmentId", defaultValue = "no-id") String investmentId) throws IOException {
     String decodedData = URLDecoder.decode(payload, "UTF-8");
     MidtransNotificationDTO dto = objectMapper.readValue(decodedData, MidtransNotificationDTO.class);
     log.info("DTO: {}", dto);
 
-    if (isTransactionSuccess(dto)) {
-      return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/success");
-    }
+    // if (isTransactionSuccess(dto)) {
+    // return new RedirectView(serverHost + "/midtrans/investments/" +
+    // dto.getOrderId() + "/success");
+    // }
 
-    if (isTransactionPending(dto.getTransactionStatus())) {
-      return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/pending");
-    }
+    // if (isTransactionPending(dto.getTransactionStatus())) {
+    // return new RedirectView(serverHost + "/midtrans/investments/" +
+    // dto.getOrderId() + "/pending");
+    // }
 
-    return new RedirectView(serverHost + "/midtrans/investments/" + dto.getOrderId() + "/failed");
+    // return new RedirectView(serverHost + "/midtrans/investments/" +
+    // dto.getOrderId() + "/failed");
+
+    return new RedirectView(String.format("http://127.0.0.1:3000/investments/%s", investmentId));
   }
 
   private boolean isTransactionPending(String transactionStatus) {

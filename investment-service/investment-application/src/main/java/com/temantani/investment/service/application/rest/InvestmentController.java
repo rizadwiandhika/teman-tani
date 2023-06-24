@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 // import com.temantani.domain.dto.BasicResponse;
@@ -27,7 +28,8 @@ import com.temantani.investment.service.domain.ports.input.service.InvestmentQue
 
 // TODO: secure request to "/investments" to be authenticated with Spring Security
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.HEAD,
+    RequestMethod.OPTIONS })
 @RequestMapping(produces = "application/json")
 public class InvestmentController {
 

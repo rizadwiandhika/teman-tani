@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ import com.temantani.project.service.domain.valueobject.ProfitDistributionDetail
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/admins", produces = "application/json")
 public class AdminController {
   private final ProjectApplicationService applicationService;

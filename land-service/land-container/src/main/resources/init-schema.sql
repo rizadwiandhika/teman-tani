@@ -108,6 +108,9 @@ ALTER TABLE "land".lands
 	NOT VALID;
 
 
+INSERT INTO "land".approvers VALUES 
+  ('9cc10842-a101-4976-9641-29cc9db071b1', 'superadmin@mail.com', 'Super Admin');
+
 -- ALTER TABLE "land".addresses
 -- 	ADD CONSTRAINT "FK_ADDRESS_LAND" FOREIGN KEY (id)
 -- 	REFERENCES "land".lands (id) MATCH SIMPLE
