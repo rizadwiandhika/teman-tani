@@ -17,7 +17,7 @@ public interface ProjectJpaRepository extends JpaRepository<FundraisingEntity, U
 
   Optional<List<FundraisingEntity>> findByStatus(FundraisingStatus status);
 
-  @Query("SELECT p FROM ProjectEntity p WHERE p.id = (SELECT i.fundraising.id FROM InvestmentEntity i WHERE i.id = :investmentId)")
+  @Query("SELECT f FROM FundraisingEntity f WHERE f.id = (SELECT i.fundraising.id FROM InvestmentEntity i WHERE i.id = :investmentId)")
   Optional<FundraisingEntity> findByInvestmentId(@Param("investmentId") UUID investmentId);
 
 }

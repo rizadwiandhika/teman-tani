@@ -19,6 +19,7 @@ public class InvestmentData {
   private String fundraisingId;
   private BigDecimal amount;
   private ZonedDateTime expiredAt;
+  private ZonedDateTime createdAt;
   private InvestmentStatus status;
 
 }

@@ -67,6 +67,7 @@ public class InvestmentDataAccessMapper {
         .investorId(investment.getInvestorId().getValue())
         .amount(investment.getAmount().getAmount())
         .expiredAt(investment.getExpiredAt())
+        .createdAt(investment.getCreatedAt())
         .status(investment.getStatus())
         .failureReasons(investment.getFailureReasons() == null ? null
             : String.join(Investment.FAILURE_REASONS_DELIMITER, investment.getFailureReasons()))
@@ -81,6 +82,7 @@ public class InvestmentDataAccessMapper {
         .investorId(new UserId(investmentEntity.getInvestorId()))
         .amount(new Money(investmentEntity.getAmount()))
         .expiredAt(investmentEntity.getExpiredAt())
+        .createdAt(investmentEntity.getCreatedAt())
         .status(investmentEntity.getStatus())
         .failureReasons(investmentEntity.getFailureReasons() == null
             ? null

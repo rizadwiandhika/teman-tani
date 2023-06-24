@@ -82,6 +82,7 @@ public class Fundraising extends AggregateRoot<ProjectId> {
         .amount(amount)
         .expiredAt(Helper.now().plusMinutes(2))
         .status(InvestmentStatus.PENDING)
+        .createdAt(Helper.now())
         .build();
 
     investments.add(investment);

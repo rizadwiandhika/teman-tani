@@ -23,6 +23,8 @@ public class Investment extends BaseEntity<InvestmentId> {
   private final UserId investorId;
   private final Money amount;
   private final ZonedDateTime expiredAt;
+  private final ZonedDateTime createdAt;
+
   private InvestmentStatus status;
   private List<String> failureReasons;
 
@@ -51,7 +53,7 @@ public class Investment extends BaseEntity<InvestmentId> {
   }
 
   public void pay() {
-    validateMandatoryFields();
+    // validateMandatoryFields();
 
     if (status != PENDING) {
       throw new InvestmentPaymentException("Investment is not in valid state for payment: " + status.name());
@@ -98,6 +100,7 @@ public class Investment extends BaseEntity<InvestmentId> {
     this.status = builder.status;
     this.failureReasons = builder.failureReasons;
     this.expiredAt = builder.expiredAt;
+    this.createdAt = builder.createdAt;
   }
 
   public ProjectId getProjectId() {
@@ -120,6 +123,10 @@ public class Investment extends BaseEntity<InvestmentId> {
     return failureReasons;
   }
 
+  public ZonedDateTime getCreatedAt() {
+    return createdAt;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -129,6 +136,7 @@ public class Investment extends BaseEntity<InvestmentId> {
     private InvestmentId id;
     private Integer version;
     private ZonedDateTime expiredAt;
+    private ZonedDateTime createdAt;
     private ProjectId projectId;
     private UserId investorId;
     private Money amount;
@@ -137,6 +145,11 @@ public class Investment extends BaseEntity<InvestmentId> {
 
     public Builder expiredAt(ZonedDateTime expiredAt) {
       this.expiredAt = expiredAt;
+      return this;
+    }
+
+    public Builder createdAt(ZonedDateTime createdAt) {
+      this.createdAt = createdAt;
       return this;
     }
 

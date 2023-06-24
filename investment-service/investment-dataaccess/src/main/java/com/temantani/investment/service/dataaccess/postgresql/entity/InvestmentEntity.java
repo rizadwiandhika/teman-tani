@@ -47,6 +47,7 @@ public class InvestmentEntity {
   private UUID investorId;
   private BigDecimal amount;
   private ZonedDateTime expiredAt;
+  private ZonedDateTime createdAt;
   private String failureReasons;
 
 }

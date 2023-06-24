@@ -88,6 +88,7 @@ public class InvestmentDataMapper {
         .fundraisingId(investment.getProjectId().getValue().toString())
         .amount(investment.getAmount().getAmount())
         .expiredAt(investment.getExpiredAt())
+        .createdAt(investment.getCreatedAt())
         .status(investment.getStatus())
         .build();
   }
