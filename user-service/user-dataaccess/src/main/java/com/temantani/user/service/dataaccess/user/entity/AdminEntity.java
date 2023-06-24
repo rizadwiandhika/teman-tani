@@ -8,6 +8,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.temantani.domain.valueobject.AdminRole;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import lombok.NoArgsConstructor;
 public class AdminEntity {
 
   @Id
+  @Type(type = "org.hibernate.type.UUIDCharType")
   private UUID id;
   private String name;
   private String email;

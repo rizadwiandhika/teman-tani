@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.temantani.domain.valueobject.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class RoleEntity {
   @Id
   @ManyToOne
   @JoinColumn(name = "USER_ID")
+  @Type(type = "org.hibernate.type.UUIDCharType")
   private UserEntity user;
 
   @Id

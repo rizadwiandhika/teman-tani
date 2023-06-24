@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Type;
+
 import com.temantani.domain.outbox.OutboxStatus;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ import lombok.Setter;
 @Table(name = "user_outbox")
 public class UserOutboxMessageEntity {
   @Id
+  @Type(type = "org.hibernate.type.UUIDCharType")
   private UUID id;
 
   @Enumerated(EnumType.STRING)

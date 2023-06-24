@@ -85,6 +85,8 @@ ALTER TABLE "user".user_roles
 	ON DELETE CASCADE 
 	NOT VALID;
 
+INSERT INTO "user".admins VALUES 
+  ('9cc10842-a101-4976-9641-29cc9db071b1', 'Super Admin', 'superadmin@mail.com', '$2a$12$5oz2wx6Z6aHyivMn4hNGse1SRFNiDlGbgEDpBCh9Xlwn609qoXPKK', '1234567891011', 'ADMIN_SUPER');
 -- ALTER TABLE "user".addresses
 -- 	ADD CONSTRAINT "FK_USERS_ADDRESSES" FOREIGN KEY (user_id)
 -- 	REFERENCES "user".users (id) MATCH SIMPLE
