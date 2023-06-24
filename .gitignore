@@ -144,3 +144,5 @@ $RECYCLE.BIN/
 /.vscode/
 /tmp/
 /storage
+/.scannerwork
+sonar-project.properties
