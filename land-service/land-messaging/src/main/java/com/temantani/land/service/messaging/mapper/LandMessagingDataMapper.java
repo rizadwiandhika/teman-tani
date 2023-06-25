@@ -3,7 +3,9 @@ package com.temantani.land.service.messaging.mapper;
 import org.springframework.stereotype.Component;
 
 import com.temantani.kafka.land.avro.model.LandRegisteredAvroModel;
+import com.temantani.kafka.land.json.model.LandRegisteredJsonModel;
 import com.temantani.kafka.user.avro.model.UserAvroModel;
+import com.temantani.kafka.user.json.model.UserJsonModel;
 import com.temantani.land.service.domain.dto.message.CreateApproverMessage;
 import com.temantani.land.service.domain.dto.message.CreateBorrowerMessage;
 import com.temantani.land.service.domain.outbox.model.LandRegisteredEventPayload;
@@ -52,6 +54,49 @@ public class LandMessagingDataMapper {
         .setCertificateUrl(payload.getCertificateUrl())
         .setPhotos(payload.getPhotos())
         .build();
+  }
+
+  public CreateApproverMessage userJsonModelToCreateApproverMessage(UserJsonModel message) {
+    return CreateApproverMessage.builder()
+        .approverId(message.getUserId())
+        .email(message.getEmail())
+        .name(message.getName())
+        .phoneNumber(message.getPhoneNumber())
+        .build();
+  }
+
+  public CreateBorrowerMessage userJsonToCreateBorrowerMessage(UserJsonModel message) {
+    return CreateBorrowerMessage.builder()
+        .borrowerId(message.getUserId())
+        .email(message.getEmail())
+        .name(message.getName())
+        .phoneNumber(message.getPhoneNumber())
+        .build();
+  }
+
+  public LandRegisteredJsonModel landRegisteredEventPayloadToLandRegistereModel(LandRegisteredEventPayload payload) {
+    return LandRegisteredJsonModel.builder()
+        .landId(payload.getLandId().toString())
+        .ownerId(payload.getOwnerId().toString())
+        .approverId(payload.getApproverId().toString())
+        .approvedAt(payload.getApprovedAt())
+        .proposedAt(payload.getProposedAt())
+        .harvestSuitabilities(payload.getHarvestSuitabilities())
+        .groundHeightValue(payload.getGroundHeightValue())
+        .groundHeightUnit(payload.getGroundHeightUnit())
+        .soilPh(payload.getSoilPh())
+        .waterAvailabilityStatus(payload.getWaterAvailabilityStatus())
+        .landUsageHistory(payload.getLandUsageHistory())
+        .landStatus(payload.getLandStatus())
+        .areaValue(payload.getAreaValue())
+        .areaUnit(payload.getAreaUnit())
+        .street(payload.getStreet())
+        .city(payload.getCity())
+        .postalCode(payload.getPostalCode())
+        .certificateUrl(payload.getCertificateUrl())
+        .photos(payload.getPhotos())
+        .build();
+
   }
 
 }

@@ -1,10 +1,9 @@
 package com.temantani.kafka;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.apache.avro.specific.SpecificRecordBase;
-
-public interface KafkaConsumer<T extends SpecificRecordBase> {
+public interface KafkaConsumer<T extends Serializable> {
 
   void recieve(List<T> messages, List<String> keys, List<Integer> partitions, List<Long> offsets);
 

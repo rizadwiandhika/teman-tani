@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.temantani.domain.exception.DataAlreadyExistsException;
 import com.temantani.kafka.KafkaConsumer;
-import com.temantani.kafka.user.avro.model.UserAvroModel;
+import com.temantani.kafka.producer.helper.KafkaMessageHelper;
+import com.temantani.kafka.user.json.model.UserJsonModel;
 import com.temantani.project.service.domain.exception.SameBankAccountException;
 import com.temantani.project.service.domain.ports.input.message.listener.UserMessageListener;
 import com.temantani.project.service.messaging.mapper.ProjectMessagingDataMapper;
@@ -19,37 +20,40 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class KafkaUserListener implements KafkaConsumer<UserAvroModel> {
+public class KafkaUserListener implements KafkaConsumer<String> {
 
   private final ProjectMessagingDataMapper mapper;
   private final UserMessageListener listener;
+  private final KafkaMessageHelper helper;
 
-  public KafkaUserListener(ProjectMessagingDataMapper mapper, UserMessageListener listener) {
+  public KafkaUserListener(ProjectMessagingDataMapper mapper, UserMessageListener listener, KafkaMessageHelper helper) {
     this.mapper = mapper;
     this.listener = listener;
+    this.helper = helper;
   }
 
   @Override
   @KafkaListener(id = "${kafka-consumer-config.user-consumer-group-id}", topics = "${project-service.user-topic-name}")
   public void recieve(
-      @Payload List<UserAvroModel> messages,
+      @Payload List<String> messages,
       @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) List<String> keys,
       @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
       @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
     messages.forEach(this::handleMessage);
   }
 
-  private void handleMessage(UserAvroModel message) {
+  private void handleMessage(String data) {
+    UserJsonModel message = helper.getEventPayload(data, UserJsonModel.class);
     if (message.getType().equals("ROLE_ACTIVATED")) {
       try {
         if (message.getActivatedRole().equals("ADMIN_PROJECT")) {
-          listener.createManager(mapper.userAvroModelToManagerRegisteredMessage(message));
+          listener.createManager(mapper.userJsonModelToManagerRegisteredMessage(message));
           log.info("{} was created: {}", message.getActivatedRole(), message.toString());
           return;
         }
 
         if (message.getActivatedRole().equals("LANDOWNER") || message.getActivatedRole().equals("INVESTOR")) {
-          listener.createReceiver(mapper.userAvroModelToReceiverRegisteredMessage(message));
+          listener.createReceiver(mapper.userJsonToReceiverRegisteredMessage(message));
           log.info("{} was created: {}", message.getActivatedRole(), message.toString());
           return;
         }
@@ -66,7 +70,7 @@ public class KafkaUserListener implements KafkaConsumer<UserAvroModel> {
 
     if (message.getType().equals("PROFILE_UPDATED")) {
       try {
-        listener.updateReceiverBank(mapper.userAvroModelToReceiverProfileUpdatedMessage(message));
+        listener.updateReceiverBank(mapper.userJsonModelToReceiverProfileUpdatedMessage(message));
         log.info("{} bank account was updated: {}", message.getUserId(), message.toString());
       } catch (SameBankAccountException e) {
         log.warn("Ignoring message since bank account is the same as the old one");

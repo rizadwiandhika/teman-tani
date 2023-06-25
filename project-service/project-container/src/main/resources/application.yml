@@ -49,7 +49,8 @@ kafka-config:
 
 kafka-producer-config:
   key-serializer-class: org.apache.kafka.common.serialization.StringSerializer
-  value-serializer-class: io.confluent.kafka.serializers.KafkaAvroSerializer
+  # value-serializer-class: io.confluent.kafka.serializers.KafkaAvroSerializer
+  value-serializer-class: org.apache.kafka.common.serialization.StringSerializer
   compression-type: snappy
   acks: all
   batch-size: 16384
@@ -64,7 +65,8 @@ kafka-consumer-config:
   close-fundraising-response-consumer-group-id: project-service-close-fundraising-response-topic-consumer
 
   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-  value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  # value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   auto-offset-reset: earliest
   specific-avro-reader-key: specific.avro.reader
   specific-avro-reader: true

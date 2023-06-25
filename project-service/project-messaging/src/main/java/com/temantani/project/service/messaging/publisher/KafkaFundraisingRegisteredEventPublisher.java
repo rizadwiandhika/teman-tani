@@ -5,7 +5,6 @@ import java.util.function.BiConsumer;
 import org.springframework.stereotype.Component;
 
 import com.temantani.domain.outbox.OutboxStatus;
-import com.temantani.kafka.investment.avro.model.FundraisingRegisteredAvroModel;
 import com.temantani.kafka.producer.helper.KafkaMessageHelper;
 import com.temantani.kafka.producer.service.KafkaProducer;
 import com.temantani.project.service.domain.config.ProjectServiceConfigData;
@@ -20,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class KafkaFundraisingRegisteredEventPublisher implements FundraisingRegisteredEventPublisher {
 
-  private final KafkaProducer<String, FundraisingRegisteredAvroModel> producer;
+  private final KafkaProducer<String, String> producer;
   private final ProjectMessagingDataMapper mapper;
   private final ProjectServiceConfigData configData;
   private final KafkaMessageHelper helper;
 
-  public KafkaFundraisingRegisteredEventPublisher(KafkaProducer<String, FundraisingRegisteredAvroModel> producer,
+  public KafkaFundraisingRegisteredEventPublisher(KafkaProducer<String, String> producer,
       ProjectMessagingDataMapper mapper, ProjectServiceConfigData configData, KafkaMessageHelper helper) {
     this.producer = producer;
     this.mapper = mapper;
@@ -41,8 +40,10 @@ public class KafkaFundraisingRegisteredEventPublisher implements FundraisingRegi
 
     String topic = configData.getFundraisingRegisteredTopicName();
     String key = outbox.getId().toString();
-    FundraisingRegisteredAvroModel data = mapper
-        .fundraisingRegisteredEventPayloadToFundraisingRegisteredAvroModel(payload);
+    // FundraisingRegisteredAvroModel data = mapper
+    // .fundraisingRegisteredEventPayloadToFundraisingRegisteredAvroModel(payload);
+    String data = helper.writeEventPayload(mapper
+        .fundraisingRegisteredEventPayloadToFundraisingRegisteredJsonModel(payload));
 
     try {
       producer.send(topic, key, data, helper.getKafkaCallback(topic, data, outbox, callback));

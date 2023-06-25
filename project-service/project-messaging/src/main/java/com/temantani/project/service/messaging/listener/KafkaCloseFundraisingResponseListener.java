@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.kafka.KafkaConsumer;
-import com.temantani.kafka.investment.avro.model.CloseFundraisingResponseAvroModel;
-import com.temantani.kafka.investment.avro.model.CloseFundraisingStatusResponseAvroModel;
+import com.temantani.kafka.investment.json.model.CloseFundraisingResponseJsonModel;
+import com.temantani.kafka.producer.helper.KafkaMessageHelper;
 import com.temantani.project.service.domain.entity.Investment;
 import com.temantani.project.service.domain.exception.ProceededHiringException;
 import com.temantani.project.service.domain.ports.input.message.listener.CloseFundraisingResponseMessageListener;
@@ -23,21 +23,23 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class KafkaCloseFundraisingResponseListener implements KafkaConsumer<CloseFundraisingResponseAvroModel> {
+public class KafkaCloseFundraisingResponseListener implements KafkaConsumer<String> {
 
   private final CloseFundraisingResponseMessageListener listener;
   private final ProjectMessagingDataMapper mapper;
+  private final KafkaMessageHelper helper;
 
   public KafkaCloseFundraisingResponseListener(CloseFundraisingResponseMessageListener listener,
-      ProjectMessagingDataMapper mapper) {
+      ProjectMessagingDataMapper mapper, KafkaMessageHelper helper) {
     this.listener = listener;
     this.mapper = mapper;
+    this.helper = helper;
   }
 
   @Override
   @KafkaListener(id = "${kafka-consumer-config.close-fundraising-response-consumer-group-id}", topics = "${project-service.close-fundraising-response-topic-name}")
   public void recieve(
-      @Payload List<CloseFundraisingResponseAvroModel> messages,
+      @Payload List<String> messages,
       @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) List<String> keys,
       @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
       @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
@@ -46,13 +48,14 @@ public class KafkaCloseFundraisingResponseListener implements KafkaConsumer<Clos
 
   }
 
-  private void handle(CloseFundraisingResponseAvroModel message) {
+  private void handle(String data) {
+    CloseFundraisingResponseJsonModel message = helper.getEventPayload(data, CloseFundraisingResponseJsonModel.class);
     ProjectId projectId = ProjectId.fromString(message.getProjectId());
     List<Investment> investments = message.getInvestments().stream()
-        .map(i -> mapper.closeFundraisingInvestmentResponseAvroModelToInvestment(i, projectId))
+        .map(i -> mapper.closeFundraisingInvestmentResponseJsonModelToInvestment(i, projectId))
         .collect(Collectors.toList());
 
-    if (message.getStatus() == CloseFundraisingStatusResponseAvroModel.CLOSING) {
+    if (message.getStatus().equals("CLOSING")) {
       log.warn("Ignoring project: {} proceeded to hiring since the status is still CLOSING", projectId.getValue());
       return;
     }

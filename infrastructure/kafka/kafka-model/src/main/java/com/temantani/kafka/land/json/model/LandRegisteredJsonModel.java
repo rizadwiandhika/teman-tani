@@ -1,15 +1,18 @@
 package com.temantani.kafka.land.json.model;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class LandRegisteredJsonModel {
   @JsonProperty
@@ -22,10 +25,10 @@ public class LandRegisteredJsonModel {
   private String approverId;
 
   @JsonProperty
-  private long approvedAt;
+  private ZonedDateTime approvedAt;
 
   @JsonProperty
-  private long proposedAt;
+  private ZonedDateTime proposedAt;
 
   @JsonProperty
   private String harvestSuitabilities;
