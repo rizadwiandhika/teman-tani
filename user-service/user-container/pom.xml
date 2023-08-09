@@ -55,7 +55,7 @@
   </dependencies>
   <build>
     <plugins>
-      <plugin>
+      <!-- <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
@@ -71,7 +71,47 @@
             </goals>
           </execution>
         </executions>
+      </plugin> -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>com.temantani.user.service.domain.UserServiceApplication</mainClass>
+        </configuration>
       </plugin>
+      <!-- <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.40.1</version>
+        <configuration>
+          <images>
+            <image>
+              <name>${project.groupId}/user.service:${project.version}</name>
+              <build>
+                <from>openjdk:19</from>
+                <assembly>
+                  <name>build</name>
+                  <descriptorRef>artifact</descriptorRef>
+                </assembly>
+                <ports>
+                  <port>8280</port>
+                </ports>
+                <cmd>java -jar build/${project.name}-${project.version}.jar</cmd>
+              </build>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>build-image</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> -->
+
     </plugins>
   </build>
 </project>

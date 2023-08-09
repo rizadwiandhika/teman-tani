@@ -182,10 +182,12 @@ public class ProjectApplicationServiceImpl implements ProjectApplicationService 
       ProfitDistributionId profitDistributionId,
       Map<ProfitDistributionDetailId, String> transferProof) {
     ProfitDistribution profitDistribution = findProfitDistributionByIdOrThrow(profitDistributionId);
+    Project project = findProjectByIdOrThrow(profitDistribution.getProjectId());
 
-    domainService.completeProfitDistribution(managerId, profitDistribution, transferProof);
+    domainService.completeProfitDistribution(managerId, project, profitDistribution, transferProof);
 
     profitDistribution = profitDistributionRepository.save(profitDistribution);
+    project = projectRepository.save(project);
 
     return mapper.profitDistributionToTrackProfitDistributionResponse(profitDistribution);
   }

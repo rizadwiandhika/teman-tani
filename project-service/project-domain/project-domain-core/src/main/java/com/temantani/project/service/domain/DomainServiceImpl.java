@@ -13,7 +13,6 @@ import com.temantani.project.service.domain.entity.Investment;
 import com.temantani.project.service.domain.entity.Land;
 import com.temantani.project.service.domain.entity.ProfitDistribution;
 import com.temantani.project.service.domain.entity.Project;
-import com.temantani.project.service.domain.entity.Sale;
 import com.temantani.project.service.domain.event.ProjectCreatedEvent;
 import com.temantani.project.service.domain.event.ProjectHiringInitializedEvent;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
@@ -70,20 +69,16 @@ public class DomainServiceImpl implements DomainService {
   }
 
   @Override
-  public void addHarvestSelling(Project project, Sale sale) {
-    project.addIncome(sale.getAmount());
-  }
-
-  @Override
   public ProfitDistribution generateProfitDistribution(UserId managerId, Project project,
       Map<UserId, BankAccount> receiverBank) {
     return project.initiateProfitDistribution(managerId, receiverBank);
   }
 
   @Override
-  public void completeProfitDistribution(UserId managetId, ProfitDistribution profitDistribution,
+  public void completeProfitDistribution(UserId managetId, Project project, ProfitDistribution profitDistribution,
       Map<ProfitDistributionDetailId, String> transferProofs) {
     profitDistribution.transferProfit(managetId, transferProofs);
+    project.distributeIncome(profitDistribution.getProjectProfit());
   }
 
 }

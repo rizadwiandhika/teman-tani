@@ -60,4 +60,5 @@ public class ProjectEntity {
   private ZonedDateTime executedAt;
   private ZonedDateTime finishedAt;
   private String failureMessages;
+  private String sellingIds;
 }

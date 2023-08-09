@@ -63,8 +63,17 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <mainClass>com.temantani.project.service.domain.ProjectServiceApplication</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+    <!-- <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
           <image>
-            <name>${project.groupId}/land.service:${project.version}</name>
+            <name>${project.groupId}/project.service:${project.version}</name>
           </image>
         </configuration>
         <executions>
@@ -76,7 +85,7 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+    </plugins> -->
   </build>
 
 </project>

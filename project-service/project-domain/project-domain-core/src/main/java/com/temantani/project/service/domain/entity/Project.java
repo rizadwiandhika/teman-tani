@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.temantani.domain.entity.AggregateRoot;
 import com.temantani.domain.helper.Helper;
@@ -25,6 +26,7 @@ import com.temantani.domain.valueobject.Money;
 import com.temantani.domain.valueobject.ProjectId;
 import com.temantani.domain.valueobject.ProjectStatus;
 import com.temantani.domain.valueobject.UserId;
+import com.temantani.project.service.domain.exception.IncomeHasBeenAddedException;
 import com.temantani.project.service.domain.exception.ProceededHiringException;
 import com.temantani.project.service.domain.exception.ProjectDomainException;
 import com.temantani.project.service.domain.valueobject.ExpenseId;
@@ -52,6 +54,7 @@ public class Project extends AggregateRoot<ProjectId> {
   private ZonedDateTime executedAt;
   private ZonedDateTime finishedAt;
   private List<String> failureMessages;
+  private List<UUID> sellingIds;
 
   public static final String FAILURE_MESSAGES_DELIMITER = ";";
 
@@ -105,7 +108,6 @@ public class Project extends AggregateRoot<ProjectId> {
     expenses = new ArrayList<>();
 
     shareHolders = new ArrayList<>();
-    // TODO: how much should a land owner takes devidend?
     shareHolders.add(ShareHolder.makeLandowner(landOwnerId));
 
     if (details == null) {
@@ -138,6 +140,8 @@ public class Project extends AggregateRoot<ProjectId> {
       throw new ProjectDomainException("Cannot start hiring since there is no collected funds");
     }
 
+    final BigDecimal INVESTMENT_DEVIDEND = new BigDecimal(0.9);
+
     investments.forEach(i -> {
       if (i.getProjectId().equals(getId()) == false) {
         throw new ProjectDomainException(
@@ -148,7 +152,7 @@ public class Project extends AggregateRoot<ProjectId> {
         throw new ProjectDomainException("Investment cannot be zero or less");
       }
 
-      BigDecimal deviden = i.getAmount().divide(collectedFunds);
+      BigDecimal deviden = i.getAmount().divide(collectedFunds).multiply(INVESTMENT_DEVIDEND);
       shareHolders.add(ShareHolder.makeInvestor(i.getInvestorId(), deviden));
     });
 
@@ -214,16 +218,25 @@ public class Project extends AggregateRoot<ProjectId> {
     expenses.add(expense);
   }
 
-  public void addIncome(Money income) {
+  public void addIncomeFromOrder(UUID orderId, Money income) {
     if (status != FINISHED) {
       throw new ProjectDomainException("Cannot add income since project is not in FINISHED status");
     }
 
-    if (income == null) {
-      throw new ProjectDomainException("Cannot add null income");
+    if (income == null || !income.isGreaterThanZero()) {
+      throw new ProjectDomainException("Cannot add null income or negative");
+    }
+
+    if (sellingIds.contains(orderId)) {
+      throw new IncomeHasBeenAddedException("Income for order: " + orderId.toString() + " has been addded!");
     }
 
     this.income = this.income.add(income);
+    sellingIds.add(orderId);
+  }
+
+  public void distributeIncome(Money distribuedIncome) {
+    this.distributedIncome = this.distributedIncome.add(distribuedIncome);
   }
 
   public ProfitDistribution initiateProfitDistribution(UserId managUserId, Map<UserId, BankAccount> receiverBank) {
@@ -352,6 +365,10 @@ public class Project extends AggregateRoot<ProjectId> {
     return failureMessages;
   }
 
+  public List<UUID> getSellingIds() {
+    return sellingIds;
+  }
+
   private Project(Builder builder) {
     super.setVersion(builder.version);
     super.setId(builder.id);
@@ -375,6 +392,7 @@ public class Project extends AggregateRoot<ProjectId> {
     this.executedAt = builder.executedAt;
     this.finishedAt = builder.finishedAt;
     this.failureMessages = builder.failureMessages;
+    this.sellingIds = builder.sellingIds;
   }
 
   public static Builder builder() {
@@ -400,6 +418,13 @@ public class Project extends AggregateRoot<ProjectId> {
     private Money distributedIncome;
     private List<ShareHolder> profitReceivers;
     private List<Expense> expenses;
+    private List<UUID> sellingIds;
+
+    public Builder setSellingIds(List<UUID> sellingIds) {
+      this.sellingIds = sellingIds;
+      return this;
+    }
+
     private ZonedDateTime createdAt;
     private ZonedDateTime executedAt;
     private ZonedDateTime finishedAt;

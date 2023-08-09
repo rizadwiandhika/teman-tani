@@ -28,7 +28,7 @@ public class ShareHolder extends BaseEntity<Long> {
   public static ShareHolder makeLandowner(UserId receiverId) {
     return new Builder()
         .type(DistributionType.LANDOWNER)
-        .deviden(BigDecimal.valueOf(0.15))
+        .deviden(BigDecimal.valueOf(0.10))
         .receiverId(receiverId)
         .build();
   }

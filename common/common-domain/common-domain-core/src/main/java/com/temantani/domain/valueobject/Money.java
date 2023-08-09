@@ -41,12 +41,12 @@ public class Money {
   }
 
   public BigDecimal divide(Money divisor) {
-    BigDecimal quotient = amount.divide(divisor.getAmount());
+    BigDecimal quotient = amount.divide(divisor.getAmount(), 2, RoundingMode.HALF_UP);
     return quotient.setScale(2);
   }
 
   private BigDecimal setScale(BigDecimal input) {
-    return input.setScale(2, RoundingMode.HALF_EVEN);
+    return input.setScale(2, RoundingMode.HALF_UP);
   }
 
   @Override
