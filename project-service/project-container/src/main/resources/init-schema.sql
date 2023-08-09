@@ -143,6 +143,7 @@ CREATE TABLE "project".projects (
   created_at timestamp with time zone NOT NULL,
   executed_at timestamp with time zone,
   finished_at timestamp with time zone,
+  selling_ids character varying COLLATE pg_catalog."default",
   failure_messages character varying COLLATE pg_catalog."default",
 
   CONSTRAINT projects_pkey PRIMARY KEY (id)
@@ -202,112 +203,112 @@ street character varying COLLATE pg_catalog."default" NOT NULL,
 city character varying COLLATE pg_catalog."default" NOT NULL,
 postal_code character varying COLLATE pg_catalog."default" NOT NULL, */
 
-INSERT INTO "project".receivers VALUES 
-  ('10cdae59-99e5-475f-9810-6cf03dfb1500', 0, 'BNI', '123456789', 'Riza'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1501', 0, 'BCA', '123456789', 'Enzo'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1502', 0, 'MANDIRI', '123456789', 'Hernowo');
+-- INSERT INTO "project".receivers VALUES 
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1500', 0, 'BNI', '123456789', 'Riza'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1501', 0, 'BCA', '123456789', 'Enzo'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1502', 0, 'MANDIRI', '123456789', 'Hernowo');
 
 INSERT INTO "project".managers VALUES 
-  ('10cdae59-99e5-475f-9810-6cf03dfb1510', 'manager@mail.com', 'Manager'),
+  -- ('10cdae59-99e5-475f-9810-6cf03dfb1510', 'manager@mail.com', 'Manager'),
   ('9cc10842-a101-4976-9641-29cc9db071b1', 'superadmin@mail.com', 'Super Admin');
 
-INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1520','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street','City','11111');
-INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1521','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street 2','City 2','22222');
+-- INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1520','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street','City','11111');
+-- INSERT INTO "project".lands VALUES ('10cdae59-99e5-475f-9810-6cf03dfb1521','RESERVED',0,'10cdae59-99e5-475f-9810-6cf03dfb1500','Street 2','City 2','22222');
 
-INSERT INTO "project".projects VALUES (
-  '10cdae59-99e5-475f-9810-6cf03dfb1554',
-  'FINISHED',
-  0,
-  '10cdae59-99e5-475f-9810-6cf03dfb1520',
-  '9cc10842-a101-4976-9641-29cc9db071b1',
-  'Description',
-  '{}',
-  'APPLE',
-  18,
-  75000000,
-  '2023-10-12 00:00:00',
-  '2024-10-12 00:00:00',
-  60000000,
-  35000000,
-  30000000,
-  '2023-06-10 00:00:00',
-  '2023-08-10 00:00:00',
-  '2023-10-10 00:00:00',
-  NULL
-);
-INSERT INTO "project".projects VALUES (
-  '10cdae59-99e5-475f-9810-6cf03dfb1555',
-  'ONGOING',
-  0,
-  '10cdae59-99e5-475f-9810-6cf03dfb1520',
-  '9cc10842-a101-4976-9641-29cc9db071b1',
-  'Description',
-  '{}',
-  'BANANA',
-  75,
-  50000000,
-  '2023-10-12 00:00:00',
-  '2024-10-12 00:00:00',
-  40000000,
-  0,
-  0,
-  '2024-06-10 00:00:00',
-  '2024-08-10 00:00:00',
-  NULL,
-  NULL
-);
-INSERT INTO "project".projects VALUES (
-  '10cdae59-99e5-475f-9810-6cf03dfb1556',
-  'FUNDRAISING',
-  0,
-  '10cdae59-99e5-475f-9810-6cf03dfb1521',
-  '9cc10842-a101-4976-9641-29cc9db071b1',
-  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, autem velit doloribus corporis facere maxime maiores sunt vitae deleniti impedit!',
-  '{}',
-  'RICE',
-  50,
-  50000000,
-  '2023-10-12 00:00:00',
-  '2024-10-12 00:00:00',
-  0,
-  0,
-  0,
-  '2024-06-10 00:00:00',
-  NULL,
-  NULL,
-  NULL
-);
+-- INSERT INTO "project".projects VALUES (
+--   '10cdae59-99e5-475f-9810-6cf03dfb1554',
+--   'FINISHED',
+--   0,
+--   '10cdae59-99e5-475f-9810-6cf03dfb1520',
+--   '9cc10842-a101-4976-9641-29cc9db071b1',
+--   'Description',
+--   '{}',
+--   'APPLE',
+--   18,
+--   75000000,
+--   '2023-10-12 00:00:00',
+--   '2024-10-12 00:00:00',
+--   60000000,
+--   35000000,
+--   30000000,
+--   '2023-06-10 00:00:00',
+--   '2023-08-10 00:00:00',
+--   '2023-10-10 00:00:00',
+--   NULL
+-- );
+-- INSERT INTO "project".projects VALUES (
+--   '10cdae59-99e5-475f-9810-6cf03dfb1555',
+--   'ONGOING',
+--   0,
+--   '10cdae59-99e5-475f-9810-6cf03dfb1520',
+--   '9cc10842-a101-4976-9641-29cc9db071b1',
+--   'Description',
+--   '{}',
+--   'BANANA',
+--   75,
+--   50000000,
+--   '2023-10-12 00:00:00',
+--   '2024-10-12 00:00:00',
+--   40000000,
+--   0,
+--   0,
+--   '2024-06-10 00:00:00',
+--   '2024-08-10 00:00:00',
+--   NULL,
+--   NULL
+-- );
+-- INSERT INTO "project".projects VALUES (
+--   '10cdae59-99e5-475f-9810-6cf03dfb1556',
+--   'FUNDRAISING',
+--   0,
+--   '10cdae59-99e5-475f-9810-6cf03dfb1521',
+--   '9cc10842-a101-4976-9641-29cc9db071b1',
+--   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, autem velit doloribus corporis facere maxime maiores sunt vitae deleniti impedit!',
+--   '{}',
+--   'RICE',
+--   50,
+--   50000000,
+--   '2023-10-12 00:00:00',
+--   '2024-10-12 00:00:00',
+--   0,
+--   0,
+--   0,
+--   '2024-06-10 00:00:00',
+--   NULL,
+--   NULL,
+--   NULL
+-- );
 
-INSERT INTO "project".expenses VALUES
-  ('5546915a-c6ed-4648-8b22-086e26fdf82a', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Pupuk 1', 'Description', 'INVOICE_URL', 2000000),
-  ('5546915a-c6ed-4648-8b22-086e26fdf82b', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Obeng 2', 'Description', 'INVOICE_URL', 4000000),
-  ('5546915a-c6ed-4648-8b22-086e26fdf82c', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Kayu 3', 'Description', 'INVOICE_URL', 8000000),
-  ('5546915a-c6ed-4648-8b22-086e26fdf82d', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Traktor 4', 'Description', 'INVOICE_URL', 1000000),
-  ('5546915a-c6ed-4648-8b22-086e26fdf82e', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Bensin 5', 'Description', 'INVOICE_URL', 4000000),
-  ('5546915a-c6ed-4648-8b22-086e26fdf82f', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Garam 6', 'Description', 'INVOICE_URL', 500000);
+-- INSERT INTO "project".expenses VALUES
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82a', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Pupuk 1', 'Description', 'INVOICE_URL', 2000000),
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82b', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Obeng 2', 'Description', 'INVOICE_URL', 4000000),
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82c', '10cdae59-99e5-475f-9810-6cf03dfb1554', '2021-10-16 18:10:30', 'Kayu 3', 'Description', 'INVOICE_URL', 8000000),
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82d', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Traktor 4', 'Description', 'INVOICE_URL', 1000000),
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82e', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Bensin 5', 'Description', 'INVOICE_URL', 4000000),
+--   ('5546915a-c6ed-4648-8b22-086e26fdf82f', '10cdae59-99e5-475f-9810-6cf03dfb1555', '2021-10-16 18:10:30', 'Garam 6', 'Description', 'INVOICE_URL', 500000);
 
-INSERT INTO "project".profit_receivers VALUES 
-  (1, 'LANDOWNER', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1500', 0.15),
-  (2, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1501', 0.35),
-  (3, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1502', 0.50),
-  (4, 'LANDOWNER', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1500', 0.15),
-  (5, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1501', 0.35),
-  (6, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1502', 0.50);
+-- INSERT INTO "project".profit_receivers VALUES 
+--   (1, 'LANDOWNER', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1500', 0.15),
+--   (2, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1501', 0.35),
+--   (3, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1554', '10cdae59-99e5-475f-9810-6cf03dfb1502', 0.50),
+--   (4, 'LANDOWNER', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1500', 0.15),
+--   (5, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1501', 0.35),
+--   (6, 'INVESTOR', '10cdae59-99e5-475f-9810-6cf03dfb1555', '10cdae59-99e5-475f-9810-6cf03dfb1502', 0.50);
 
-SELECT setval('profit_receivers_id_seq', 100);
+-- SELECT setval('profit_receivers_id_seq', 100);
 
-INSERT INTO "project".profit_distributions VALUES 
-  ('10cdae59-99e5-475f-9810-6cf03dfb1564', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 20000000, '2024-08-10 00:00:00'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1565', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 10000000, '2024-09-10 00:00:00'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1566', 'WAITING', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 5000000, '2024-10-10 00:00:00');
+-- INSERT INTO "project".profit_distributions VALUES 
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1564', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 20000000, '2024-08-10 00:00:00'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1565', 'COMPLETED', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 10000000, '2024-09-10 00:00:00'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1566', 'WAITING', '10cdae59-99e5-475f-9810-6cf03dfb1554', '9cc10842-a101-4976-9641-29cc9db071b1', 5000000, '2024-10-10 00:00:00');
 
-INSERT INTO "project".profit_distribution_details VALUES
-  ('10cdae59-99e5-475f-9810-6cf03dfb1700', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 3000000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1701', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 7000000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1702', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 10000000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1703', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 1500000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1704', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 3500000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1705', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 500000, 'SOME_URL'),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1706', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 750000, NULL),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1707', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 1750000, NULL),
-  ('10cdae59-99e5-475f-9810-6cf03dfb1708', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 2500000, NULL);
+-- INSERT INTO "project".profit_distribution_details VALUES
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1700', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 3000000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1701', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 7000000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1702', '10cdae59-99e5-475f-9810-6cf03dfb1564', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 10000000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1703', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 1500000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1704', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 3500000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1705', '10cdae59-99e5-475f-9810-6cf03dfb1565', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 500000, 'SOME_URL'),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1706', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'LANDOWNER', 0.15, '10cdae59-99e5-475f-9810-6cf03dfb1500', 'BNI', '123123123', 'Riza', 750000, NULL),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1707', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'INVESTOR', 0.35, '10cdae59-99e5-475f-9810-6cf03dfb1501', 'BCA', '123123123', 'Enzo', 1750000, NULL),
+--   ('10cdae59-99e5-475f-9810-6cf03dfb1708', '10cdae59-99e5-475f-9810-6cf03dfb1566', 'INVESTOR', 0.55, '10cdae59-99e5-475f-9810-6cf03dfb1502', 'MANDIRI', '123123123', 'Hernowo', 2500000, NULL);

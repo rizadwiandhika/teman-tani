@@ -3,7 +3,9 @@ package com.temantani.project.service.dataaccess.mapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -22,11 +24,11 @@ import com.temantani.project.service.dataaccess.entity.ExpenseEntity;
 import com.temantani.project.service.dataaccess.entity.InvestmentEntity;
 import com.temantani.project.service.dataaccess.entity.LandEntity;
 import com.temantani.project.service.dataaccess.entity.ManagerEntity;
+import com.temantani.project.service.dataaccess.entity.OutboxEntity;
 import com.temantani.project.service.dataaccess.entity.ProfitDistributionDetailEntity;
 import com.temantani.project.service.dataaccess.entity.ProfitDistributionEntity;
 import com.temantani.project.service.dataaccess.entity.ProfitReceiverEntity;
 import com.temantani.project.service.dataaccess.entity.ProjectEntity;
-import com.temantani.project.service.dataaccess.entity.OutboxEntity;
 import com.temantani.project.service.dataaccess.entity.ReceiverEntity;
 import com.temantani.project.service.dataaccess.entity.type.OutboxType;
 import com.temantani.project.service.domain.entity.Expense;
@@ -45,7 +47,10 @@ import com.temantani.project.service.domain.valueobject.ExpenseId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionDetailId;
 import com.temantani.project.service.domain.valueobject.ProfitDistributionId;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class ProjectDataAccessMapper {
 
   private final ObjectMapper objectMapper;
@@ -149,6 +154,10 @@ public class ProjectDataAccessMapper {
         .createdAt(project.getCreatedAt())
         .executedAt(project.getExecutedAt())
         .finishedAt(project.getFinishedAt())
+        .sellingIds(project.getSellingIds() == null || project.getSellingIds().size() == 0
+            ? null
+            : String.join(Project.FAILURE_MESSAGES_DELIMITER,
+                project.getSellingIds().stream().map(UUID::toString).toList()))
         .failureMessages(project.getFailureMessages() == null || project.getFailureMessages().size() == 0
             ? null
             : String.join(Project.FAILURE_MESSAGES_DELIMITER, project.getFailureMessages()))
@@ -158,6 +167,14 @@ public class ProjectDataAccessMapper {
     entity.getExpenses().forEach((e) -> e.setProject(entity));
 
     return entity;
+  }
+
+  private String writeAsJson(Object object) {
+    try {
+      return objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public ProfitReceiverEntity profitReceiverToProfitReceiverEntity(ShareHolder receiver) {
@@ -205,11 +222,24 @@ public class ProjectDataAccessMapper {
         .createdAt(entity.getCreatedAt())
         .executedAt(entity.getExecutedAt())
         .finishedAt(entity.getFinishedAt())
+        .setSellingIds(getSellingIds(entity))
         .failureMessages(
             entity.getFailureMessages() == null || entity.getFailureMessages().trim().length() == 0
                 ? new ArrayList<>()
                 : new ArrayList<>(Arrays.asList(entity.getFailureMessages().split(Project.FAILURE_MESSAGES_DELIMITER))))
         .build();
+  }
+
+  private List<UUID> getSellingIds(ProjectEntity entity) {
+
+    if (entity.getSellingIds() == null || entity.getSellingIds().trim().length() == 0) {
+      return new ArrayList<>();
+    }
+    return new ArrayList<>(Arrays.asList(entity.getSellingIds().split(Project.FAILURE_MESSAGES_DELIMITER))
+        .stream().map((s) -> {
+          log.info("UUID string: {}", s);
+          return UUID.fromString(s);
+        }).collect(Collectors.toList()));
   }
 
   public ShareHolder profitReceiverEntityToProfitReceiver(ProfitReceiverEntity entity) {

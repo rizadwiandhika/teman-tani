@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 import org.springframework.stereotype.Component;
 
 import com.temantani.domain.outbox.OutboxStatus;
-import com.temantani.kafka.investment.avro.model.CloseFundraisingRequestAvroModel;
+import com.temantani.kafka.investment.json.model.CloseFundraisingRequestJsonModel;
 import com.temantani.kafka.producer.helper.KafkaMessageHelper;
 import com.temantani.kafka.producer.service.KafkaProducer;
 import com.temantani.project.service.domain.config.ProjectServiceConfigData;
@@ -19,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class KafkaCloseFundraisingRequestedEventPublisher implements CloseFundraisingRequestedEventPublisher {
 
-  private final KafkaProducer<String, CloseFundraisingRequestAvroModel> producer;
+  private final KafkaProducer<String, String> producer;
   private final ProjectServiceConfigData configData;
   private final KafkaMessageHelper helper;
 
-  public KafkaCloseFundraisingRequestedEventPublisher(KafkaProducer<String, CloseFundraisingRequestAvroModel> producer,
+  public KafkaCloseFundraisingRequestedEventPublisher(KafkaProducer<String, String> producer,
       ProjectServiceConfigData configData, KafkaMessageHelper helper) {
     this.producer = producer;
     this.configData = configData;
@@ -38,7 +38,8 @@ public class KafkaCloseFundraisingRequestedEventPublisher implements CloseFundra
 
     String topic = configData.getCloseFundraisingRequestTopicName();
     String key = outbox.getId().toString();
-    CloseFundraisingRequestAvroModel data = new CloseFundraisingRequestAvroModel(payload.getProjectId().toString());
+    String data = helper.writeEventPayload(
+        CloseFundraisingRequestJsonModel.builder().projectId(payload.getProjectId().toString()).build());
 
     try {
       producer.send(topic, key, data, helper.getKafkaCallback(topic, data, outbox, callback));

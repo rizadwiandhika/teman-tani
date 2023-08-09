@@ -1,12 +1,13 @@
 package com.temantani.kafka.producer.helper;
 
+import java.io.Serializable;
 import java.util.function.BiConsumer;
 
-import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.temantani.domain.outbox.OutboxStatus;
 
@@ -22,7 +23,7 @@ public class KafkaMessageHelper {
     this.mapper = mapper;
   }
 
-  public <T extends SpecificRecordBase, U> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(
+  public <T extends Serializable, U> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(
       String responseTopicName,
       T avroModel,
       U outboxMessage,
@@ -48,5 +49,15 @@ public class KafkaMessageHelper {
       log.error("Unable to parse json into {}", type.getName(), e);
       throw new RuntimeException(e);
     }
+  }
+
+  public String writeEventPayload(Object any) {
+    try {
+      return mapper.writeValueAsString(any);
+    } catch (JsonProcessingException e) {
+      log.error("Unable to write into json {}", any, e);
+      throw new RuntimeException(e);
+    }
+
   }
 }

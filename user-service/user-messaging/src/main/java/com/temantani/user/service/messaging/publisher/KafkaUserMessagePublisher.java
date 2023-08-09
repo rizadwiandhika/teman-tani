@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.temantani.domain.outbox.OutboxStatus;
 import com.temantani.kafka.producer.helper.KafkaMessageHelper;
 import com.temantani.kafka.producer.service.KafkaProducer;
-import com.temantani.kafka.user.avro.model.UserAvroModel;
 import com.temantani.user.service.domain.config.UserServiceConfigData;
 import com.temantani.user.service.domain.outbox.model.UserEventPayload;
 import com.temantani.user.service.domain.outbox.model.UserOutboxMessage;
@@ -23,10 +22,10 @@ public class KafkaUserMessagePublisher implements UserMesasgePublisher {
   private final UserMessagingDataMapper mapper;
   private final UserServiceConfigData userServiceConfigData;
   private final KafkaMessageHelper kafkaMessageHelper;
-  private final KafkaProducer<String, UserAvroModel> producer;
+  private final KafkaProducer<String, String> producer;
 
   public KafkaUserMessagePublisher(UserMessagingDataMapper mapper, UserServiceConfigData userServiceConfigData,
-      KafkaMessageHelper kafkaMessageHelper, KafkaProducer<String, UserAvroModel> producer) {
+      KafkaMessageHelper kafkaMessageHelper, KafkaProducer<String, String> producer) {
     this.mapper = mapper;
     this.userServiceConfigData = userServiceConfigData;
     this.kafkaMessageHelper = kafkaMessageHelper;
@@ -39,7 +38,7 @@ public class KafkaUserMessagePublisher implements UserMesasgePublisher {
 
     String topic = userServiceConfigData.getUserTopicName();
     String key = payload.getUserId().toString();
-    UserAvroModel value = mapper.userEventPayloadToUserAvroModel(payload);
+    String value = kafkaMessageHelper.writeEventPayload(mapper.userEventPayloadToUserJsonModel(payload));
 
     try {
       producer.send(topic, key, value, kafkaMessageHelper.getKafkaCallback(topic, value, outboxMessage, callback));
